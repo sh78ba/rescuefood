@@ -16,7 +16,7 @@ const Home = () => {
       </div>
       <div className="flex  content-center flex-wrap justify-between mx-5 flex-col sm:flex-row">
     
-
+ 
        <Card heading={"Home"} buttonname={"Donate"} imagelink={homeimg}/>
       
        <Card heading={"Donate Food"} buttonname={"Donate Food"} imagelink={requestfoodimg}/>
