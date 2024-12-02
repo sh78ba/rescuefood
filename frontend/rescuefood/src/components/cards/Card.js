@@ -3,7 +3,7 @@ import React from 'react'
 
 const Card = (props) => {
   return (
-    <div className='w-1/6  border-2 border-green-400 text-center bg-white rounded-2xl my-4'>
+    <div className=' w-11/12 flex-wrap  sm:w-1/3   lg:w-1/6   border-2 border-green-400 text-center bg-white rounded-2xl my-4'>
         <h1 className=' text-2xl my-3'>{props.heading}</h1>
         <img src={props.imagelink} alt="card-img" className='h-20 w-full' />
         <button
