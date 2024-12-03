@@ -4,6 +4,7 @@ import './App.css';
 import Header from './components/Header';
 import Home from './components/Home';
 import Topdonors from './components/Topdonors';
+import Register from './components/Register';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
     <Routes>
     <Route path={"/"} element={<Home/>}/>
     <Route path={"/topdonors"} element={<Topdonors/>}/>
+    <Route path={"/register"} element={<Register/>}/>
 
     </Routes>
     

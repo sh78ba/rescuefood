@@ -61,18 +61,15 @@ const Header = () => {
               Top Donors
             </li>
           </Link>
-          <li
-            className='mx-5 p-2 text-left bg-gray-700 hover:bg-green-600 rounded-md md:inline-block cursor-pointer'
-            onClick={closeMenu}
-          >
-            Stories
-          </li>
+          <Link to="/register">
           <li
             className='mx-5 p-2 text-left bg-orange-500 hover:bg-orange-400 rounded-md md:inline-block cursor-pointer'
             onClick={closeMenu}
           >
-            Register
+            
+            Register / Login
           </li>
+          </Link>
           <li
             className='mx-5 p-2 text-left bg-orange-500 hover:bg-orange-400 rounded-md md:inline-block cursor-pointer'
             onClick={closeMenu}
