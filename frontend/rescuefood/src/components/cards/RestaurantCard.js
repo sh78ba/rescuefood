@@ -2,7 +2,7 @@ import React from 'react'
 
 const RestaurantCard = () => {
   return (
-    <div className='border-2 inline-block  text-center rounded-lg' >
+    <div className='border-2 inline-block  text-center rounded-lg ' >
         <h1 className='text-white p-2 text-3xl'>Today's Donation</h1>
        
      
