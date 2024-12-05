@@ -6,7 +6,7 @@ import Topdonors from './components/Topdonors';
 import Register from './components/Register';
 import LoginSignup from './components/LoginSignUp/LoginSignup';
 import Restauranthome from './components/Restaurant/Restauranthome';
-import Navbar from './components/Navbar';
+import Navbar from './components/Restaurant/Navbar';
 
 
 function App() {
