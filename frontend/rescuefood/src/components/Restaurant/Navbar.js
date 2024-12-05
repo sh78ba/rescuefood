@@ -50,11 +50,11 @@ const Navbar = () => {
       >
         <div className='flex flex-col md:flex-row space-y-4 md:space-y-0 '>
         
-            <li className='mx-5 p-2 text-left bg-gray-700 hover:bg-green-600 rounded-md md:inline-block'>
+            <li className='mx-5 p-2 text-left bg-gray-700 hover:bg-green-600 rounded-md md:inline-block cursor-pointer'>
               Dashboard
             </li>
           
-            <li className='mx-5 p-2 text-left bg-gray-700 hover:bg-green-600 rounded-md md:inline-block'>
+            <li className='mx-5 p-2 text-left bg-gray-700 hover:bg-green-600 rounded-md md:inline-block cursor-pointer'>
              Profile
             </li>
          
