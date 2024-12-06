@@ -8,6 +8,7 @@ import LoginSignup from './components/LoginSignUp/LoginSignup';
 import Restauranthome from './components/Restaurant/Restauranthome';
 import Navbar from './components/Restaurant/Navbar';
 import Profile from './components/cards/Profile';
+import Kycform from './components/Kycform';
 
 
 function App() {
@@ -39,6 +40,7 @@ function App() {
           {/* Add additional restaurant routes */}
           <Route path="/register/restaurant/dashboard" element={<Restauranthome />} />
           <Route path="/register/restaurant/profile" element={<Profile />} />
+          <Route path="/kycform" element={<Kycform />} />
         </Routes>
       </div>
     </div>
