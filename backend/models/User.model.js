@@ -14,8 +14,9 @@ const userSchema=new mongoose.Schema({
         required:true
     },
     location:{
-        type:String
-    },
+        type:Point,
+        coordinates:[]
+      },
     password:{
         type:String,
         required:true
