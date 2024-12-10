@@ -35,7 +35,7 @@ const verifyVolunteerSignUpBody = async (req, res, next) => {
 
     next();
   } catch (err) {
-    console.log("Error while validating volunteer signup ", err);
+    console.log("Error while validating volunteer signup body ", err);
     return res.status(500).send({
       message: "Error while validating  volunteer signup body",
     });

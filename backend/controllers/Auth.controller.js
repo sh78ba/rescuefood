@@ -19,7 +19,7 @@ exports.volunteersignup=async(req,res)=>{
     }
 
     try{
-        const created_volunteer=await user_model.create(volunteerObject);
+        const created_volunteer=await volunteer_model.create(volunteerObject);
 
         res.status(201).send({message:"SignUp Successfull!! Please SignIn"})
     }catch(err){
@@ -34,7 +34,7 @@ exports.volunteersignup=async(req,res)=>{
 exports.volunteersignin=async(req,res)=>{
     const request_body=req.body
     
-    const getUser=await user_model.findOne({email:request_body.email})
+    const getUser=await volunteer_model.findOne({email:request_body.email})
 
     if(getUser==null){
         res.status(400).send({
