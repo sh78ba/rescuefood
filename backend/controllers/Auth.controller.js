@@ -66,7 +66,7 @@ exports.volunteersignin=async(req,res)=>{
 
 //volunteer forgot password
 
-exports.volunteerRequestPasswordReset=async(req,res,next)=>{
+exports.volunteerRequestPasswordReset=async(req,res)=>{
     const req_email=req.body.email;
 try{
     const get_User=await volunteer_model.findOne({email:req_email})
@@ -75,23 +75,24 @@ try{
             message:"Email doesn't exists!"
         })
     }
-    const secret=process.env.SECRET_JWT+get_User.email;
+    const secret = process.env.SECRET_JWT + get_User.email;
+    const token = jwt.sign({ email: get_User.email }, secret, { expiresIn: 3600 });
 
-    const token=jwt.sign({email:get_User.email},secret,{expiresIn:'1h'});
 
     const resetURL=config.volunteerResetPasswordURL+`?email=${get_User.email}&token=${token}`;
 
     const transporter = nodemailer.createTransport({
-        service: 'gmail',
+        host: "smtp.gmail.com",
+        port: 465,
         auth: {
-          user: 't1129172@gmail.com',
-          pass: 'password',
+          user: process.env.APP_EMAIL,
+          pass: process.env.APP_PASSWORD,
         },
       });
   
       const mailOptions = {
-        to: user.email,
-        from: process.env.EMAIL,
+        to: get_User.email,
+        from: process.env.APP_EMAIL,
         subject: 'Password Reset Request',
         text: `You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n
         Please click on the following link, or paste this into your browser to complete the process:\n\n
@@ -110,6 +111,54 @@ try{
 }
 
 
+//volunter reset password 
+exports.volunteerResetPassword = async (req, res) => {
+    const token = req.body.token;
+    const password = req.body.password;
+    const email = req.body.email;
+
+  
+    try {
+      // Validate input
+      if (!token || !password || !email) {
+        return res.status(400).json({ message: "All fields are required!" });
+      }
+  
+      // Find user
+      const user = await volunteer_model.findOne({ email });
+      if (!user) {
+        return res.status(404).json({ message: "User not found!" });
+      }
+  
+      // Construct secret
+  
+      // Verify token
+      const secret = process.env.SECRET_JWT + user.email;
+let verify;
+try {
+    verify = jwt.verify(token, secret);
+} catch (err) {
+    console.error("JWT verification failed:", err.message);
+    return res.status(400).json({ message: "Invalid or expired token" });
+}
+
+  
+      // Hash the new password
+      const encryptedPassword = await bcrypt.hash(password, 8);
+  
+      // Update user's password
+      await volunteer_model.updateOne(
+        { email },
+        { $set: { password: encryptedPassword } }
+      );
+  
+      res.status(200).json({ message: "Password has been reset successfully" });
+    } catch (error) {
+      console.error("Error resetting password:", error.message);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  };
+  
 //volunteer location update
 
 
