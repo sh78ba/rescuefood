@@ -29,6 +29,7 @@ db.once("open",()=>{
 
 
 require("./routes/volunteer.route")(app)
+require("./routes/restaurant.route")(app)
 
 
 app.listen(process.env.PORT,()=>{

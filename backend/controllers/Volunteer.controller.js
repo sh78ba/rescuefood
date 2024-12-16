@@ -1,18 +1,17 @@
 const volunteer_model = require("../models/Volunteer.model");
 
-// Volunteer location update
 exports.volunteerLocationUpdate = async (req, res) => {
-  const { email, coordinates } = req.body; // Destructuring to make the code more readable
+  const { email, coordinates } = req.body; 
   try {
-    // Find the user by email
+   
     const getUser = await volunteer_model.findOne({ email: email });
 
-    // If user is not found
+    
     if (!getUser) {
       return res.status(404).send({ message: "User not found" });
     }
 
-    // Parse the coordinates if needed
+    
     let parsedCoordinates;
     try {
       parsedCoordinates = Array.isArray(coordinates) ? coordinates : JSON.parse(coordinates);
@@ -20,7 +19,6 @@ exports.volunteerLocationUpdate = async (req, res) => {
       return res.status(400).send({ message: "Invalid coordinates format" });
     }
 
-    // Validate that parsedCoordinates is an array of two numbers
     if (
       !Array.isArray(parsedCoordinates) ||
       parsedCoordinates.length !== 2 ||

@@ -42,7 +42,7 @@ const verifyVolunteerSignUpBody = async (req, res, next) => {
   }
 };
 
-const verifyVolunteerSignInBody = async (req, res, next) => {
+const verifySignInBody = async (req, res, next) => {
   try {
     if (!req.body.email) {
       return res.status(400).send({
@@ -93,11 +93,59 @@ const verifyToken = async (req, res, next) => {
 };
 
 
+//for restaurant
+const verifyRestaurantSignUpBody = async (req, res, next) => {
+  try {
+    if (!req.body.name) {
+      return res.status(400).send({
+        message: "Name is not provided in request body",
+      });
+    }
+    if (!req.body.email) {
+      return res.status(400).send({
+        message: "Email is not provided in request body",
+      });
+    }
+    if (!req.body.phone) {
+      return res.status(400).send({
+        message: "Phone is not provided in request body",
+      });
+    }
+    if (!req.body.password) {
+      return res.status(400).send({
+        message: "Password is not provided in request body",
+      });
+    }
+    if (!req.body.location) {
+      return res.status(400).send({
+        message: "Location is not provided in request body",
+      });
+    }
+
+    const get_user = await volunteer_model.findOne({ email: req.body.email });
+    if (get_user) {
+      return res.status(400).send({
+        message: "Email Already Exists",
+      });
+    }
+
+    next();
+  } catch (err) {
+    console.log("Error while validating Restaurant signup body ", err);
+    return res.status(500).send({
+      message: "Error while validating  Restaurant signup body",
+    });
+  }
+};
+
+
+
 
 
 
 module.exports = {
     verifyToken:verifyToken,
-    verifyVolunteerSignInBody:verifyVolunteerSignInBody,
-    verifyVolunteerSignUpBody:verifyVolunteerSignUpBody
+    verifySignInBody:verifySignInBody,
+    verifyVolunteerSignUpBody:verifyVolunteerSignUpBody,
+    verifyRestaurantSignUpBody:verifyRestaurantSignUpBody
 };
