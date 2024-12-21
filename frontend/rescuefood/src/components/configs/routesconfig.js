@@ -1,1 +1,1 @@
-export const BACKEND_PATH="http://localhost:6000"
+export const BACKEND_PATH="http://localhost:5002"

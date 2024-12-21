@@ -194,36 +194,52 @@ exports.restaurantsignup=async(req,res)=>{
 
 
 //restaurant signin
-exports.restaurantsignin=async(req,res)=>{
-  const request_body=req.body
-  
-  const getRestaurant=await restaurant_model.findOne({email:request_body.email})
+exports.restaurantsignin = async (req, res) => {
+  try {
+    const request_body = req.body;
 
-  if(getRestaurant==null){
-      res.status(400).send({
-          message:"Email is not valid"
-      })
+    // Validate email and password presence
+    if (!request_body.email || !request_body.password) {
+      return res.status(400).json({ message: "Email and password are required" });
+    }
+
+    // Find restaurant by email
+    const getRestaurant = await restaurant_model.findOne({ email: request_body.email });
+
+    if (!getRestaurant) {
+      return res.status(400).json({ message: "Restaurant with this email does not exist" });
+    }
+
+    // Compare passwords
+    const isPasswordValid = bcrypt.compareSync(request_body.password, getRestaurant.password);
+
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: "Incorrect password, please try again" });
+    }
+
+    // JWT secret key check
+    if (!process.env.SECRET_JWT) {
+      return res.status(500).json({ message: "JWT secret key is missing" });
+    }
+
+    // Generate JWT token
+    const token = jwt.sign({ email: getRestaurant.email }, process.env.SECRET_JWT, {
+      expiresIn: 604800, // 7 days
+    });
+
+    // Send response with restaurant data and token
+    res.status(200).json({
+      name: getRestaurant.name,
+      email: getRestaurant.email,
+      accessToken: token,
+    });
+
+  } catch (err) {
+    console.error("Error sign in restaurant:", err.message);
+    res.status(500).json({ message: "Internal server error" });
   }
+};
 
-  const isPasswordValid=bcrypt.compareSync(request_body.password,getRestaurant.password)
-
-  if(!isPasswordValid){
-      res.status(401).send({
-          message:"Invalid Password !!"
-      })
-  }
-
-  const token=jwt.sign({email:getRestaurant.email},process.env.SECRET_JWT,{
-      expiresIn:604800
-  })
-
-  res.status(200).send({
-      name:getRestaurant.name,
-      email:getRestaurant.email,
-      accessToken:token
-  })
-
-}
 
 //restaurant forgot password
 exports.restaurantResetPassword = async (req, res) => {
