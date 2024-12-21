@@ -7,11 +7,14 @@ require("dotenv").config()
 const app=express()
 
 
-const corsoption={
-    origin:"*"
-}
+const corsOptions = {
+    origin: "http://localhost:3000", // Allow frontend running on localhost:3000
+    methods: ["GET", "POST", "PUT", "DELETE"], // Allow necessary HTTP methods
+    allowedHeaders: ["Content-Type", "Authorization"], // Allow required headers
+    credentials: true, // Allow cookies or other credentials
+  };
 
-app.use(cors(corsoption))
+app.use(cors(corsOptions))
 app.use(express.json());
 
 

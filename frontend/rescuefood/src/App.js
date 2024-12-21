@@ -4,7 +4,7 @@ import Header from './components/Header';
 import Home from './components/Home';
 import Topdonors from './components/Topdonors';
 import Register from './components/Register';
-import LoginSignup from './components/LoginSignUp/LoginSignup';
+import Login from './components/LoginPage/Login';
 import Restauranthome from './components/Restaurant/Restauranthome';
 import Navbar from './components/Restaurant/Navbar';
 import Profile from './components/cards/Profile';
@@ -35,7 +35,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/topdonors" element={<Topdonors />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/register/restaurant" element={<LoginSignup heading={"Restaurant"} />} />
+          <Route path="/register/restaurant" element={<Login heading={"Restaurant"} userType={"restaurant"}/>} />
          
           {/* Add additional restaurant routes */}
           <Route path="/register/restaurant/dashboard" element={<Restauranthome />} />
