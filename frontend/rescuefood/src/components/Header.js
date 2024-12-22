@@ -74,7 +74,7 @@ const Header = () => {
             className='mx-5 p-2 text-left bg-orange-500 hover:bg-orange-400 rounded-md md:inline-block cursor-pointer'
             onClick={closeMenu}
           >
-            Donate Now
+            Donate Rs.
           </li>
         </div>
       </ul>

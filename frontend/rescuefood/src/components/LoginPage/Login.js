@@ -44,10 +44,12 @@ const Login = (props) => {
 
       if (response.ok) {
         const data = await response.json();
-        alert('Login successful!');
+        
         localStorage.setItem('token', data.accessToken);
         localStorage.setItem('email', data.email);
         localStorage.setItem('name', data.name);
+        localStorage.setItem('type', props.userType);
+        alert('Login successful!');
 
         if (props.userType === 'restaurant') {
           navigate('/restaurant/dashboard');

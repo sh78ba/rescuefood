@@ -15,22 +15,20 @@ import VolunteerSignup from './components/Volunteer/VolunteerSignUp';
 
 function App() {
   const location = useLocation();
-
+  const userType = localStorage.getItem("type");
   // Paths where the RestaurantHeader should be displayed
-  const restaurantPaths = [
-    "/register/restaurant/afterlogin",
-    "/register/restaurant/dashboard",
-    "/register/restaurant/profile"
-  ];
-
-  const isRestaurantHeader = restaurantPaths.some(path =>
-    location.pathname.startsWith(path)
-  );
+ 
 
   return (
     <div className="App bg-gradient-to-r from-green-800 to-green-400 w-screen h-screen overflow-scroll">
       {/* Conditionally render different headers */}
-      {isRestaurantHeader ? <Navbar /> : <Header />}
+      {userType === "restaurant" ? (
+        <Navbar />
+      ) : userType === "volunteer" ? (
+        <Navbar />
+      ) : (
+        <Header />
+      )}
 
       <div>
         <Routes>

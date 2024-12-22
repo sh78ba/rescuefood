@@ -88,6 +88,7 @@ const RestaurantSignup = () => {
       const data = await response.json();
       if (response.ok) {
         alert("Restaurant Signup successful!");
+        navigate("/restaurant/login")
       } else {
         alert(`Signup failed: ${data.message}`);
       }
