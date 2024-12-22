@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { BACKEND_PATH } from '../configs/routesconfig';
+import { useNavigate } from 'react-router';
 
 const VolunteerSignup = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -30,6 +32,10 @@ const VolunteerSignup = () => {
     }
   };
 
+  const handleClick = () => {
+    navigate('/volunteer/login');
+  };
+
   const handleSubmit = async () => {
     setIsSubmitting(true);
     try {
@@ -55,19 +61,63 @@ const VolunteerSignup = () => {
   };
 
   return (
-    <div className='signup-container'>
-      <h1>Volunteer Signup</h1>
-      <form onSubmit={(e) => e.preventDefault()}>
-        <input type='text' name='name' placeholder='Full Name' onChange={handleChange} />
-        <input type='email' name='email' placeholder='Email' onChange={handleChange} />
-        <input type='text' name='phone' placeholder='Phone Number' onChange={handleChange} />
-        <input type='text' name='latitude' placeholder='Latitude' onChange={handleChange} />
-        <input type='text' name='longitude' placeholder='Longitude' onChange={handleChange} />
-        <input type='password' name='password' placeholder='Password' onChange={handleChange} />
-        <button onClick={handleSubmit} disabled={isSubmitting}>
-          {isSubmitting ? 'Submitting...' : 'Sign Up'}
-        </button>
-      </form>
+    <div className="flex justify-center items-center min-h-screen">
+      <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-md">
+        <h1 className="text-2xl font-semibold text-center mb-6">Volunteer Signup</h1>
+        <form onSubmit={(e) => e.preventDefault()} className="space-y-4">
+          <input
+            type="text"
+            name="name"
+            placeholder="Full Name"
+            onChange={handleChange}
+            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+          />
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            onChange={handleChange}
+            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+          />
+          <input
+            type="text"
+            name="phone"
+            placeholder="Phone Number"
+            onChange={handleChange}
+            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+          />
+      
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            onChange={handleChange}
+            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+          />
+          <button
+            onClick={handleSubmit}
+            disabled={isSubmitting}
+            className={`w-full py-3 rounded-lg text-white ${
+              isSubmitting
+                ? 'bg-gray-400 cursor-not-allowed'
+                : ' bg-orange-400 text-white hover:bg-orange-500 transition duration-300'
+            }`}
+          >
+            {isSubmitting ? 'Submitting...' : 'Sign Up'}
+          </button>
+        </form>
+        <div className="mt-4 text-center">
+          <p className="text-sm text-gray-600">
+            Already a member?{' '}
+            <span
+              className="text-green-500 font-medium cursor-pointer hover:underline"
+              onClick={handleClick}
+            >
+              Sign In Now
+            </span>
+          </p>
+        </div>
+      </div>
     </div>
   );
 };

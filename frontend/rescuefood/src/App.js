@@ -9,7 +9,9 @@ import Restauranthome from './components/Restaurant/Restauranthome';
 import Navbar from './components/Restaurant/Navbar';
 import Profile from './components/cards/Profile';
 import Kycform from './components/Kycform';
-
+import DashboardVolunteer from './components/Volunteer/DashboardVolunteer';
+import RestaurantSignUp from "./components/Restaurant/RestaurantSignup"
+import VolunteerSignup from './components/Volunteer/VolunteerSignUp';
 
 function App() {
   const location = useLocation();
@@ -35,12 +37,19 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/topdonors" element={<Topdonors />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/register/restaurant" element={<Login heading={"Restaurant"} userType={"restaurant"}/>} />
+          <Route path="/restaurant/login" element={<Login heading={"Restaurant"} userType={"restaurant"}/>} />
          
           {/* Add additional restaurant routes */}
-          <Route path="/register/restaurant/dashboard" element={<Restauranthome />} />
-          <Route path="/register/restaurant/profile" element={<Profile />} />
+          <Route path="/restaurant/dashboard" element={<Restauranthome />} />
+          <Route path="/restaurant/profile" element={<Profile />} />
+          <Route path="/restaurant/signup" element={<RestaurantSignUp />} />
           <Route path="/kycform" element={<Kycform />} />
+
+
+        {/*Paths for volunteer*/}
+          <Route path='/volunteer/dashboard' element={<DashboardVolunteer/>}/>
+          <Route path="/volunteer/login" element={<Login heading={"Volunteer"} userType={"volunteer"}/>} />
+          <Route path='/volunteer/signup' element={<VolunteerSignup/>}/>
         </Routes>
       </div>
     </div>
