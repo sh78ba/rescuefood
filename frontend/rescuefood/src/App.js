@@ -12,6 +12,7 @@ import Kycform from './components/Kycform';
 import DashboardVolunteer from './components/Volunteer/DashboardVolunteer';
 import RestaurantSignUp from "./components/Restaurant/RestaurantSignup"
 import VolunteerSignup from './components/Volunteer/VolunteerSignUp';
+import Map from './components/maps/Map';
 
 function App() {
   const location = useLocation();
@@ -48,6 +49,10 @@ function App() {
           <Route path='/volunteer/dashboard' element={<DashboardVolunteer/>}/>
           <Route path="/volunteer/login" element={<Login heading={"Volunteer"} userType={"volunteer"}/>} />
           <Route path='/volunteer/signup' element={<VolunteerSignup/>}/>
+
+
+        <Route path='/map' element={<Map/>}/>
+
         </Routes>
       </div>
     </div>
