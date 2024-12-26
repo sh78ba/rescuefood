@@ -12,7 +12,7 @@ import Kycform from './components/Kycform';
 import DashboardVolunteer from './components/Volunteer/DashboardVolunteer';
 import RestaurantSignUp from "./components/Restaurant/RestaurantSignup"
 import VolunteerSignup from './components/Volunteer/VolunteerSignUp';
-import Map from './components/maps/Map';
+import GMap from './components/maps/GMap';
 
 function App() {
   const location = useLocation();
@@ -51,7 +51,7 @@ function App() {
           <Route path='/volunteer/signup' element={<VolunteerSignup/>}/>
 
 
-        <Route path='/map' element={<Map/>}/>
+        <Route path='/map' element={<GMap/>}/>
 
         </Routes>
       </div>
