@@ -51,7 +51,7 @@ function App() {
           <Route path='/volunteer/signup' element={<VolunteerSignup/>}/>
 
 
-        <Route path='/map' element={<GMap/>}/>
+        <Route path='/volunteer/map' element={<GMap/>}/>
 
         </Routes>
       </div>

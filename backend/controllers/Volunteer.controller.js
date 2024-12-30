@@ -41,3 +41,9 @@ exports.volunteerLocationUpdate = async (req, res) => {
     res.status(500).send({ message: "Error in updating location" });
   }
 };
+
+exports.registerVolunteer = (socket) => {
+  socket.join("volunteers");
+  console.log(`Socket ${socket.id} joined the 'volunteers' room`);
+};
+

@@ -20,8 +20,9 @@ exports.createRequest = async (req, res) => {
       });
   
       // Save the donation request to the database
-      await newRequest.save();
-  
+      const savedData=await newRequest.save();
+
+      io.to("volunteers").emit("newRequest", savedData);
       // Respond with the created request
       res.status(201).json({
         message: 'Donation request created successfully.',
