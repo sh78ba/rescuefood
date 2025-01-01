@@ -50,7 +50,6 @@ const setupWebSocket = (server) => {
 
 module.exports = setupWebSocket;
 
-
 module.exports = (socket, io) => {
   // Event for volunteers to register
   socket.on("registerAsVolunteer", () => {

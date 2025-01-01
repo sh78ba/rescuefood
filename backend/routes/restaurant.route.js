@@ -8,5 +8,6 @@ module.exports=(app)=>{
     app.post("/rescuefood/api/v1/restaurant/resetpasswordlink",auth_controller.restaurantRequestPasswordReset)
     app.post("/rescuefood/api/v1/restaurant/resetpasswordrequest",auth_controller.restaurantResetPassword)
     app.post("/rescuefood/api/v1/restaurant/donate",restuarant_controller.createRequest)
+    app.post("/rescuefood/api/v1/restaurant/history",restuarant_controller.getDonationHistoryByEmail)
     
 }

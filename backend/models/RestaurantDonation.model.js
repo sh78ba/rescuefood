@@ -20,6 +20,6 @@ const restaurantDonationSchema = new mongoose.Schema({
   weight: {
     type: Number,
   },
-});
+},{timestamps:true});
 
 module.exports = mongoose.model("RestaurantDonation", restaurantDonationSchema);
