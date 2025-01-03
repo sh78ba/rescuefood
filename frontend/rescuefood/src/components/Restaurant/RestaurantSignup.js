@@ -3,7 +3,7 @@ import { BACKEND_PATH } from "../configs/routesconfig";
 import { useNavigate } from "react-router";
 
 const RestaurantSignup = () => {
-  const navigate=useNavigate();
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -69,10 +69,9 @@ const RestaurantSignup = () => {
     );
   };
 
-
-  const handleClick=()=>{
-    navigate("/restaurant/login")
-  }
+  const handleClick = () => {
+    navigate("/restaurant/login");
+  };
 
   const handleSubmit = async () => {
     setIsSubmitting(true);
@@ -88,7 +87,7 @@ const RestaurantSignup = () => {
       const data = await response.json();
       if (response.ok) {
         alert("Restaurant Signup successful!");
-        navigate("/restaurant/login")
+        navigate("/restaurant/login");
       } else {
         alert(`Signup failed: ${data.message}`);
       }
@@ -100,9 +99,9 @@ const RestaurantSignup = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen ">
-      <div className="w-full max-w-md bg-white p-4 rounded-lg shadow-md">
-        <h1 className="text-2xl font-semibold text-center mb-6">
+    <div className="flex justify-center items-center min-h-screen bg-gradient-to-r from-orange-400 to-red-500">
+      <div className="w-full max-w-md bg-white p-6 rounded-lg shadow-xl">
+        <h1 className="text-3xl font-semibold text-center text-orange-600 mb-6">
           Restaurant Signup
         </h1>
         <form onSubmit={(e) => e.preventDefault()} className="space-y-4">
@@ -111,21 +110,21 @@ const RestaurantSignup = () => {
             name="name"
             placeholder="Restaurant Name"
             onChange={handleChange}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
+            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
           />
           <input
             type="email"
             name="email"
             placeholder="Email"
             onChange={handleChange}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
+            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
           />
           <input
             type="text"
             name="phone"
             placeholder="Phone Number"
             onChange={handleChange}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
+            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
           />
           <div className="flex flex-wrap gap-2">
             <input
@@ -134,7 +133,7 @@ const RestaurantSignup = () => {
               placeholder="Latitude"
               value={formData.location.coordinates[1] || ""}
               onChange={handleChange}
-              className="flex-1 min-w-0 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
+              className="flex-1 min-w-0 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
             />
             <input
               type="text"
@@ -142,7 +141,7 @@ const RestaurantSignup = () => {
               placeholder="Longitude"
               value={formData.location.coordinates[0] || ""}
               onChange={handleChange}
-              className="flex-1 min-w-0 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
+              className="flex-1 min-w-0 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
             />
           </div>
 
@@ -165,21 +164,21 @@ const RestaurantSignup = () => {
             name="address"
             placeholder="Address"
             onChange={handleChange}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
+            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
           />
           <input
             type="text"
             name="proofId"
             placeholder="Proof ID"
             onChange={handleChange}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
+            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
           />
           <input
             type="password"
             name="password"
             placeholder="Password"
             onChange={handleChange}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
+            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
           />
           <button
             onClick={handleSubmit}
@@ -194,8 +193,11 @@ const RestaurantSignup = () => {
           </button>
           <div className="mt-2">
             <p className="text-sm text-black text-center">
-              Aleady a member?
-              <span className="text-green-500 cursor-pointer" onClick={handleClick}>
+              Already a member?{" "}
+              <span
+                className="text-green-500 cursor-pointer hover:underline"
+                onClick={handleClick}
+              >
                 Sign In Now
               </span>
             </p>

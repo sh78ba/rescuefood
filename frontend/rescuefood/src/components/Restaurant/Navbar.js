@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import logo from "../images/logo.png";
-import { useNavigate } from 'react-router';
+import { useNavigate } from "react-router";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -15,32 +15,41 @@ const Navbar = () => {
   };
 
   const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen); // Toggle the menu open/close
+    setIsMenuOpen(!isMenuOpen);
   };
 
-  // Close the menu when the user clicks outside
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (isMenuOpen && !event.target.closest('.navbar-menu') && !event.target.closest('.hamburger-button')) {
-        setIsMenuOpen(false); // Close the menu if clicked outside
+      if (
+        isMenuOpen &&
+        !event.target.closest(".navbar-menu") &&
+        !event.target.closest(".hamburger-button")
+      ) {
+        setIsMenuOpen(false);
       }
     };
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isMenuOpen]);
 
   return (
-    <div className="bg-gray-800 flex justify-between items-center px-5 py-2">
-      <div className="flex justify-between items-center px-4 py-2">
+    <nav className="bg-gradient-to-r from-orange-400 to-red-500 text-white shadow-lg">
+      <div className="flex justify-between items-center px-6 py-4">
         {/* Logo */}
-        <img src={logo} alt="logo" className="h-10 rounded-lg" />
+        <img
+          src={logo}
+          alt="logo"
+          className="h-12 rounded-lg cursor-pointer"
+          onClick={() => navigate("/")}
+        />
 
         {/* Hamburger Button */}
         <button
           className="block md:hidden p-2 rounded-md text-white hover:bg-gray-700 focus:outline-none hamburger-button"
           onClick={toggleMenu}
+          aria-label="Toggle menu"
         >
           <svg
             className="w-6 h-6"
@@ -57,42 +66,60 @@ const Navbar = () => {
             />
           </svg>
         </button>
-      </div>
 
-      {/* Navigation Menu for Desktop */}
-      <ul className="hidden md:flex md:flex-row md:items-center md:space-x-6 text-white">
-        <li className="mx-5 p-2 text-left bg-gray-700 hover:bg-green-600 rounded-md cursor-pointer">
-          Dashboard
-        </li>
-        <li className="mx-5 p-2 text-left bg-gray-700 hover:bg-green-600 rounded-md cursor-pointer">
-          Profile
-        </li>
-        <li
-          className="mx-5 p-2 text-left bg-orange-500 hover:bg-orange-400 rounded-md cursor-pointer"
-          onClick={handleLogout}
-        >
-          Logout
-        </li>
-      </ul>
+        {/* Navigation Menu (Desktop) */}
+        <ul className="hidden md:flex md:items-center md:space-x-8 text-lg">
+          <li
+            className="cursor-pointer p-3 hover:bg-red-600 rounded-md transition transform hover:scale-105"
+            onClick={() => navigate("/restaurant/dashboard")}
+          >
+            <i className="fas fa-tachometer-alt mr-2"></i>Dashboard
+          </li>
+          <li
+            className="cursor-pointer p-3 hover:bg-red-600 rounded-md transition transform hover:scale-105"
+            onClick={() => navigate("/profile")}
+          >
+            <i className="fas fa-user-circle mr-2"></i>Profile
+          </li>
+          <li
+            className="cursor-pointer p-3 bg-red-500 hover:bg-red-400 rounded-md transition transform hover:scale-105"
+            onClick={handleLogout}
+          >
+            <i className="fas fa-sign-out-alt mr-2"></i>Logout
+          </li>
+        </ul>
+      </div>
 
       {/* Mobile Navigation Menu */}
       {isMenuOpen && (
-        <div className="md:hidden navbar-menu flex flex-col bg-gray-700 space-y-4 text-white p-4">
-          <li className="p-2 text-left bg-gray-700 hover:bg-green-600 rounded-md cursor-pointer">
-            Dashboard
-          </li>
-          <li className="p-2 text-left bg-gray-700 hover:bg-green-600 rounded-md cursor-pointer">
-            Profile
+        <div className="navbar-menu md:hidden bg-gray-800 p-6 space-y-4 text-center rounded-lg shadow-lg">
+          <li
+            className="cursor-pointer p-3 hover:bg-red-600 rounded-md transition transform hover:scale-105"
+            onClick={() => {
+              setIsMenuOpen(false);
+              navigate("/dashboard");
+            }}
+          >
+            <i className="fas fa-tachometer-alt mr-2"></i>Dashboard
           </li>
           <li
-            className="p-2 text-left bg-orange-500 hover:bg-orange-400 rounded-md cursor-pointer"
+            className="cursor-pointer p-3 hover:bg-red-600 rounded-md transition transform hover:scale-105"
+            onClick={() => {
+              setIsMenuOpen(false);
+              navigate("/profile");
+            }}
+          >
+            <i className="fas fa-user-circle mr-2"></i>Profile
+          </li>
+          <li
+            className="cursor-pointer p-3 bg-red-500 hover:bg-red-400 rounded-md transition transform hover:scale-105"
             onClick={handleLogout}
           >
-            Logout
+            <i className="fas fa-sign-out-alt mr-2"></i>Logout
           </li>
         </div>
       )}
-    </div>
+    </nav>
   );
 };
 

@@ -21,7 +21,7 @@ function App() {
  
 
   return (
-    <div className="App bg-gradient-to-r from-green-800 to-green-400 w-screen h-screen overflow-scroll">
+    <div className="App  w-screen h-screen overflow-scroll bg-gradient-to-r from-orange-400 to-red-500">
       {/* Conditionally render different headers */}
       {userType === "restaurant" ? (
         <Navbar />
