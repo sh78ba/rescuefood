@@ -6,7 +6,6 @@ import Topdonors from './components/Topdonors';
 import Register from './components/Register';
 import Login from './components/LoginPage/Login';
 import Restauranthome from './components/Restaurant/Restauranthome';
-import Navbar from './components/Restaurant/Navbar';
 import Profile from './components/cards/Profile';
 import Kycform from './components/Kycform';
 import DashboardVolunteer from './components/Volunteer/DashboardVolunteer';
@@ -21,15 +20,15 @@ function App() {
  
 
   return (
-    <div className="App  w-screen h-screen overflow-scroll bg-gradient-to-r from-orange-400 to-red-500">
+    <div className="App ">
       {/* Conditionally render different headers */}
-      {userType === "restaurant" ? (
+      {/* {userType === "restaurant" ? (
         <Navbar />
       ) : userType === "volunteer" ? (
         <Navbar />
       ) : (
         <Header />
-      )}
+      )} */}
 
       <div>
         <Routes>
@@ -39,8 +38,7 @@ function App() {
           <Route path="/restaurant/login" element={<Login heading={"Restaurant"} userType={"restaurant"}/>} />
          
           {/* Add additional restaurant routes */}
-          <Route path="/restaurant/dashboard" element={<Restauranthome />} />
-          <Route path="/restaurant/profile" element={<Profile />} />
+          <Route path="/restaurant/dashboard/*" element={<Restauranthome />} />
           <Route path="/restaurant/signup" element={<RestaurantSignUp />} />
           <Route path="/kycform" element={<Kycform />} />
 
