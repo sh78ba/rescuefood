@@ -99,9 +99,9 @@ const RestaurantSignup = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gradient-to-r from-orange-400 to-red-500">
+    <div className="flex justify-center items-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md bg-white p-6 rounded-lg shadow-xl">
-        <h1 className="text-3xl font-semibold text-center text-orange-600 mb-6">
+        <h1 className="text-3xl font-semibold text-center text-black mb-6">
           Restaurant Signup
         </h1>
         <form onSubmit={(e) => e.preventDefault()} className="space-y-4">
@@ -110,21 +110,21 @@ const RestaurantSignup = () => {
             name="name"
             placeholder="Restaurant Name"
             onChange={handleChange}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <input
             type="email"
             name="email"
             placeholder="Email"
             onChange={handleChange}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <input
             type="text"
             name="phone"
             placeholder="Phone Number"
             onChange={handleChange}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <div className="flex flex-wrap gap-2">
             <input
@@ -133,7 +133,7 @@ const RestaurantSignup = () => {
               placeholder="Latitude"
               value={formData.location.coordinates[1] || ""}
               onChange={handleChange}
-              className="flex-1 min-w-0 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+              className="flex-1 min-w-0 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             <input
               type="text"
@@ -141,7 +141,7 @@ const RestaurantSignup = () => {
               placeholder="Longitude"
               value={formData.location.coordinates[0] || ""}
               onChange={handleChange}
-              className="flex-1 min-w-0 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+              className="flex-1 min-w-0 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
@@ -151,7 +151,7 @@ const RestaurantSignup = () => {
             className={`w-full py-2 rounded-lg text-white ${
               isFetchingLocation
                 ? "bg-gray-400 cursor-not-allowed"
-                : "bg-orange-500 hover:bg-orange-600 transition duration-300"
+                : "bg-blue-500 hover:bg-blue-600 transition duration-300"
             }`}
             disabled={isFetchingLocation}
           >
@@ -164,21 +164,21 @@ const RestaurantSignup = () => {
             name="address"
             placeholder="Address"
             onChange={handleChange}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <input
             type="text"
             name="proofId"
             placeholder="Proof ID"
             onChange={handleChange}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <input
             type="password"
             name="password"
             placeholder="Password"
             onChange={handleChange}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <button
             onClick={handleSubmit}
@@ -186,7 +186,7 @@ const RestaurantSignup = () => {
             className={`w-full py-3 rounded-lg text-white ${
               isSubmitting
                 ? "bg-gray-400 cursor-not-allowed"
-                : "bg-orange-500 hover:bg-orange-600 transition duration-300"
+                : "bg-blue-500 hover:bg-blue-600 transition duration-300"
             }`}
           >
             {isSubmitting ? "Submitting..." : "Sign Up"}

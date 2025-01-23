@@ -61,37 +61,37 @@ const VolunteerSignup = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gradient-to-r from-orange-400 to-red-500">
+    <div className="flex justify-center items-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-md">
-        <h1 className="text-2xl font-semibold text-center mb-6 text-orange-500">Volunteer Signup</h1>
+        <h1 className="text-2xl font-semibold text-center mb-6 text-black">Volunteer Signup</h1>
         <form onSubmit={(e) => e.preventDefault()} className="space-y-4">
           <input
             type="text"
             name="name"
             placeholder="Full Name"
             onChange={handleChange}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
+            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
           <input
             type="email"
             name="email"
             placeholder="Email"
             onChange={handleChange}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
+            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
           <input
             type="text"
             name="phone"
             placeholder="Phone Number"
             onChange={handleChange}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
+            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
           <input
             type="password"
             name="password"
             placeholder="Password"
             onChange={handleChange}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
+            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
           <button
             onClick={handleSubmit}
@@ -99,7 +99,7 @@ const VolunteerSignup = () => {
             className={`w-full py-3 rounded-lg text-white ${
               isSubmitting
                 ? 'bg-gray-400 cursor-not-allowed'
-                : 'bg-orange-500 hover:bg-orange-400 transition duration-300'
+                : 'bg-blue-500 hover:bg-blue-400 transition duration-300'
             }`}
           >
             {isSubmitting ? 'Submitting...' : 'Sign Up'}

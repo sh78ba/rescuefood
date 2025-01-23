@@ -68,14 +68,14 @@ const Login = (props) => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gradient-to-r from-orange-400 to-red-500">
+    <div className="flex justify-center items-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
-        <h1 className="text-3xl font-bold text-center mb-6 text-orange-500">{props.heading}</h1>
+        <h1 className="text-3xl font-bold text-center mb-6 text-black">{props.heading}</h1>
         <form onSubmit={handleLogin} className="space-y-4">
           <div className="flex flex-col">
             <input
               id="email"
-              className="mt-1 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-400"
+              className="mt-1 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
               type="email"
               name="email"
               placeholder="Enter your email"
@@ -87,7 +87,7 @@ const Login = (props) => {
           <div className="flex flex-col">
             <input
               id="password"
-              className="mt-1 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-400"
+              className="mt-1 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
               type="password"
               name="password"
               placeholder="Enter your password"
@@ -104,7 +104,7 @@ const Login = (props) => {
           </div>
           <button
             type="submit"
-            className="w-full bg-orange-500 text-white py-3 rounded-lg hover:bg-orange-400 transition duration-300"
+            className="w-full bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-400 transition duration-300"
             disabled={false}
           >
             Login
