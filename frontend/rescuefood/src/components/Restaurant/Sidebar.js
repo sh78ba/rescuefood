@@ -7,6 +7,10 @@ import { useNavigate } from "react-router";
 
 const Sidebar = () => {
   const navigate = useNavigate(); // Correctly invoke the useNavigate hook
+  const handleLogout=()=>{
+    localStorage.clear();
+    navigate("/")
+  }
 
   return (
     <div className="w-20 2xl:w-64 bg-blue-600 text-white flex flex-col">
@@ -43,7 +47,7 @@ const Sidebar = () => {
             </span>
           </li>
           {/* Logout */}
-          <li className="p-4 hover:bg-blue-800 flex items-center justify-center lg:justify-start group">
+          <li onClick={handleLogout} className="p-4 hover:bg-blue-800 flex items-center justify-center lg:justify-start group">
             <CiLogout className="text-6xl 2xl:text-xl" />
             <span className="hidden 2xl:inline ml-3 absolute bg-black text-white px-2 py-1 rounded shadow-md 2xl:static 2xl:bg-transparent 2xl:shadow-none">
               Logout

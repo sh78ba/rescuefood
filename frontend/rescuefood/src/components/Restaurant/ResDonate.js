@@ -1,9 +1,39 @@
-import React from 'react'
+import React, { useState } from 'react';
+import axios from 'axios';
+import { BACKEND_PATH } from '../configs/routesconfig';
 
 const ResDonate = () => {
+  const [foods, setFoods] = useState('');
+  const [weight, setWeight] = useState('');
+
+  const handleRequestOrder = async () => {
+    const email = localStorage.getItem("email");
+    if (!email) {
+      alert("Please log in to create a donation request.");
+      return;
+    }
+    try {
+      const response = await axios.post(
+        `${BACKEND_PATH}/rescuefood/api/v1/restaurant/donate`,
+        {
+          email,
+          donationList: foods.split(",").map((food) => food.trim()),
+          weight: parseFloat(weight),
+        }
+      );
+      alert("Donation request created successfully!");
+      setFoods('');
+      setWeight('');
+      console.log(response.data);
+    } catch (err) {
+      console.error(err);
+      alert("Failed to create donation request.");
+    }
+  };
+
   return (
     <>
-         {/* Donation Request Form */}
+      {/* Donation Request Form */}
       <div className="bg-white p-6 rounded-lg shadow-lg my-8">
         <h2 className="text-2xl font-semibold mb-4">Request Donation</h2>
         <div className="space-y-4">
@@ -11,26 +41,26 @@ const ResDonate = () => {
             type="text"
             className="w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-500"
             placeholder="Enter foods separated by commas"
-           // value={foods}
-            //onChange={(e) => setFoods(e.target.value)}
+            value={foods}
+            onChange={(e) => setFoods(e.target.value)}
           />
           <input
             type="text"
             className="w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-500"
             placeholder="Amount in Kg"
-            //value={weight}
-            //onChange={(e) => setWeight(e.target.value)}
+            value={weight}
+            onChange={(e) => setWeight(e.target.value)}
           />
           <button
-           // onClick={handleRequestOrder}
+            onClick={handleRequestOrder}
             className="w-full p-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
           >
             Request Order
           </button>
         </div>
       </div>
-      </>
-  )
-}
+    </>
+  );
+};
 
-export default ResDonate
+export default ResDonate;
