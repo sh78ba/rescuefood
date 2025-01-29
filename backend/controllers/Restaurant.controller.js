@@ -1,4 +1,5 @@
 const RestaurantDonationModel = require("../models/RestaurantDonation.model");
+const RestaurantModel=require("../models/Restaurant.model")
 
 //donation
 
@@ -65,6 +66,37 @@ exports.getDonationHistoryByEmail = async (req, res) => {
     res.status(200).send({ donations });
   } catch (error) {
     console.error(error);
+    res.status(500).send({ message: "Server error, please try again later." });
+  }
+};
+
+
+//restaurant profile
+exports.getResProfile = async (req, res) => {
+  const email = req.body.email;
+  if (!email) {
+    return res.status(400).send({ message: "Email is required" });
+  }
+
+  try {
+    const getProfile = await RestaurantModel.findOne({ email: email });
+
+    if (!getProfile) {
+      return res.status(404).send({ message: "No profile found for this email." });
+    }
+
+    const newResponse = {
+      _id: getProfile._id,
+      name: getProfile.name,
+      email: getProfile.email,
+      phone: getProfile.phone,
+      location: getProfile.location,
+      address: getProfile.address
+    };
+
+    res.status(200).send(newResponse);
+  } catch (e) {
+    console.error(e);
     res.status(500).send({ message: "Server error, please try again later." });
   }
 };

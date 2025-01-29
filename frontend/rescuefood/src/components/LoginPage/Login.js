@@ -52,7 +52,7 @@ const Login = (props) => {
         alert('Login successful!');
 
         if (props.userType === 'restaurant') {
-          navigate('/restaurant/dashboard');
+          navigate('restaurant/dashboard/home');
         } else {
           navigate('/volunteer/dashboard');
         }
