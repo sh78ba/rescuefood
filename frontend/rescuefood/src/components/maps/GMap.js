@@ -1,7 +1,11 @@
-
-import React, { useState, useEffect } from 'react';
-import { AdvancedMarker, APIProvider, Map, InfoWindow } from '@vis.gl/react-google-maps';
-import io from 'socket.io-client';
+import React, { useState, useEffect } from "react";
+import {
+  AdvancedMarker,
+  APIProvider,
+  Map,
+  InfoWindow,
+} from "@vis.gl/react-google-maps";
+import io from "socket.io-client";
 
 const GMap = () => {
   const [currentLocation, setCurrentLocation] = useState(null);
@@ -10,7 +14,7 @@ const GMap = () => {
   const [data, setData] = useState([]); // Data received from WebSocket
 
   // WebSocket URL
-  const SOCKET_URL = 'http://localhost:5002'; // Replace with your backend WebSocket server URL
+  const SOCKET_URL = "http://localhost:5002"; // Replace with your backend WebSocket server URL
 
   useEffect(() => {
     // Connect to the WebSocket server
@@ -19,11 +23,8 @@ const GMap = () => {
     // Listen for data updates
     socket.on("requestedData", (data) => {
       console.log("Received requested data:", data);
-     setData(data); // Update the state with live data
+      setData(data); // Update the state with live data
     });
-
-
-    
 
     // Cleanup on component unmount
     return () => {
@@ -84,48 +85,90 @@ const GMap = () => {
 
   return (
     <APIProvider apiKey={process.env.REACT_APP_MAP_API}>
-      {currentLocation ? (
-        <Map
-          style={{ width: '100vw', height: '100vh' }}
-          defaultCenter={currentLocation}
-          defaultZoom={13}
-          mapId={'6d24858ab309337a'}
-        >
-          {/* Marker for current location with custom SVG icon */}
-          <AdvancedMarker
-            position={currentLocation}
-            title="Your Location"
-          >
-            <p className='text-2xl'>📍</p>
-          </AdvancedMarker>
-
-          {/* Markers for other points from WebSocket data */}
-          {data.map((point, index) => (
-            <AdvancedMarker
-              key={index}
-              position={{ lat: point.latitude, lng: point.longitude }}
-              title={point.name}
-              onClick={() => handleMarkerClick(point)}
-            />
-          ))}
-
-          {/* InfoWindow for the selected point */}
-          {selectedPoint && (
-            <InfoWindow
-              position={{ lat: selectedPoint.latitude, lng: selectedPoint.longitude }}
-              onCloseClick={() => setSelectedPoint(null)}
+      <div className="flex flex-col md:flex-row h-screen">
+        {/* Map Section */}
+        <div className="w-full md:w-3/5 h-[60vh] md:h-full">
+          {currentLocation ? (
+            <Map
+              style={{ width: "100%", height: "100%" }}
+              defaultCenter={currentLocation}
+              defaultZoom={13}
+              mapId={"6d24858ab309337a"}
             >
-              <div>
-                <h3>{selectedPoint.name}</h3>
-                {distance && <p>Distance: {distance}</p>}
-                <button onClick={() => handleAccept(selectedPoint)}>Accept</button>
-              </div>
-            </InfoWindow>
+              {/* Marker for current location with custom SVG icon */}
+              <AdvancedMarker position={currentLocation} title="Your Location">
+                <p className="text-2xl">📍</p>
+              </AdvancedMarker>
+
+              {/* Markers for other points from WebSocket data */}
+              {data.map((point, index) => (
+                <AdvancedMarker
+                  key={index}
+                  position={{ lat: point.latitude, lng: point.longitude }}
+                  title={point.name}
+                  onClick={() => handleMarkerClick(point)}
+                />
+              ))}
+
+              {/* InfoWindow for the selected point */}
+              {selectedPoint && (
+                <InfoWindow
+                  position={{
+                    lat: selectedPoint.latitude,
+                    lng: selectedPoint.longitude,
+                  }}
+                  onCloseClick={() => setSelectedPoint(null)}
+                >
+                  <div>
+                    <h3>{selectedPoint.name}</h3>
+                    {distance && <p>Distance: {distance}</p>}
+                    <button
+                      className="bg-blue-500 text-white px-4 py-2 mt-2 rounded"
+                      onClick={() => handleAccept(selectedPoint)}
+                    >
+                      Accept
+                    </button>
+                  </div>
+                </InfoWindow>
+              )}
+            </Map>
+          ) : (
+            <div className="flex items-center justify-center h-full">
+              Loading your location...
+            </div>
           )}
-        </Map>
-      ) : (
-        <div>Loading your location...</div>
-      )}
+        </div>
+
+        {/* Restaurant List */}
+        <div className="w-full md:w-2/5 bg-gray-100 overflow-auto h-[40vh] md:h-full p-4">
+          <h2 className="text-xl font-bold mb-4">Available Restaurants</h2>
+          <ul className="space-y-3">
+            {data.length > 0 ? (
+              data.map((restaurant, index) => (
+                <li
+                  key={index}
+                  className="p-4 bg-white rounded shadow flex justify-between items-center"
+                >
+                  <div>
+                    <h3 className="text-lg font-semibold">{restaurant.name}</h3>
+                    <p className="text-sm text-gray-600">
+                      {restaurant.address || "Address not available"}
+                    </p>
+                  </div>
+                  <button
+                    className="bg-green-500 text-white px-4 py-2 rounded"
+                    onClick={() => handleMarkerClick(restaurant)}
+                  >
+                    View
+                  </button>
+                </li>
+              ))
+            ) : (
+              <p className="text-gray-500">No restaurants available.</p>
+            )}
+          </ul>
+        </div>
+      </div>
     </APIProvider>
   );
 };
