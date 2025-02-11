@@ -18,15 +18,14 @@ const GMap = () => {
 
   useEffect(() => {
     const socket = io(SOCKET_URL);
-    console.log(data);
   
     socket.on("requestedData", (data) => {
       console.log("Received requested data:", data);
       setData(
         data.map((point) => ({
           ...point,
-          latitude: Number(point.location[1]), // Correcting latitude
-          longitude: Number(point.location[0]), // Correcting longitude
+          latitude: Number(point.location[0]), // Correcting latitude
+          longitude: Number(point.location[1]), // Correcting longitude
         }))
       );
     });
@@ -35,7 +34,6 @@ const GMap = () => {
       socket.disconnect();
     };
   }, []);
-  
 
   // Fetch user's current location
   useEffect(() => {
@@ -43,8 +41,8 @@ const GMap = () => {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           setCurrentLocation({
-            lat: Number(position.coords.latitude), // Ensure it's a number
-            lng: Number(position.coords.longitude), // Ensure it's a number
+            lat: Number(position.coords.latitude),
+            lng: Number(position.coords.longitude),
           });
         },
         (error) => {
@@ -61,6 +59,7 @@ const GMap = () => {
 
   const handleMarkerClick = (point) => {
     setSelectedPoint(point);
+    setDistance(null); // Reset previous distance
 
     if (currentLocation) {
       const service = new window.google.maps.DistanceMatrixService();
@@ -71,12 +70,22 @@ const GMap = () => {
           travelMode: window.google.maps.TravelMode.DRIVING,
         },
         (response, status) => {
-          if (status === window.google.maps.DistanceMatrixStatus.OK) {
-            const distanceText = response.rows[0].elements[0].distance.text;
-            setDistance(distanceText);
+          console.log("Distance Matrix Response:", response, "Status:", status);
+          if (
+            status === window.google.maps.DistanceMatrixStatus.OK &&
+            response.rows.length > 0 &&
+            response.rows[0].elements.length > 0
+          ) {
+            const element = response.rows[0].elements[0];
+            if (element.status === "OK" && element.distance) {
+              setDistance(element.distance.text);
+            } else {
+              console.warn("Distance data unavailable:", element.status);
+              setDistance("Distance data not available");
+            }
           } else {
-            console.error("Error fetching distance: ", status);
-            alert("Unable to fetch distance. Please try again.");
+            console.error("Error fetching distance:", status);
+            setDistance("Unable to fetch distance");
           }
         }
       );
@@ -113,17 +122,16 @@ const GMap = () => {
 
               {/* Markers for other points */}
               {data.map((point, index) => (
-  <AdvancedMarker
-    key={index}
-    position={{
-      lat: point.latitude, // Corrected Latitude
-      lng: point.longitude, // Corrected Longitude
-    }}
-    title={point.restaurantEmail || "Unnamed Restaurant"} // Updated title
-    onClick={() => handleMarkerClick(point)}
-  />
-))}
-
+                <AdvancedMarker
+                  key={index}
+                  position={{
+                    lat: point.latitude, // Corrected Latitude
+                    lng: point.longitude, // Corrected Longitude
+                  }}
+                  title={point.restaurantEmail || "Unnamed Restaurant"}
+                  onClick={() => handleMarkerClick(point)}
+                />
+              ))}
 
               {/* InfoWindow */}
               {selectedPoint && (
