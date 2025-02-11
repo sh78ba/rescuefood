@@ -7,10 +7,13 @@ const { getIoInstance } = require('./Io.controller');
 
 exports.createRequest = async (req, res) => {
   try {
-    const { email, donationList, weight } = req.body;
+    const { email, donationList, weight,location,name } = req.body;
 
     if (!email) {
       return res.status(400).send({ message: "Restaurant email is required." });
+    }
+    if (!name) {
+      return res.status(400).send({ message: "Restaurant name is required." });
     }
     if (!Array.isArray(donationList) || donationList.length === 0) {
       return res.status(400).send({ message: "Donation list must be a non-empty array." });
@@ -19,12 +22,26 @@ exports.createRequest = async (req, res) => {
       return res.status(400).send({ message: "Weight must be a valid number." });
     }
 
-    const formattedDonationList = donationList.map((item) => ({ itemName: item }));
+    if (!Array.isArray(location) || location.length !== 2) {
+      return res.status(400).send({ message: "Location must be an array of two numbers." });
+    }
+    
+   // Convert string values to numbers (avoid directly modifying location)
+const formattedLocation = [parseFloat(location[0]), parseFloat(location[1])];
+
+if (formattedLocation.some(isNaN)) {
+  return res.status(400).send({ message: "Location coordinates must be valid numbers." });
+}
+
+    
     const newRequest = new RestaurantDonationModel({
       restaurantEmail: email,
-      donationList: formattedDonationList,
-      weight
+      restaurantName:name,
+      donationList: donationList.map((item) => ({ itemName: item })),
+      weight,
+      location: formattedLocation, // Ensure proper format
     });
+    
 
     await newRequest.save();
 

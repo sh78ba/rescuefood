@@ -49,6 +49,7 @@ const Login = (props) => {
         localStorage.setItem('email', data.email);
         localStorage.setItem('name', data.name);
         localStorage.setItem('type', props.userType);
+        localStorage.setItem('location',JSON.stringify(data.location))
         alert('Login successful!');
 
         if (props.userType === 'restaurant') {

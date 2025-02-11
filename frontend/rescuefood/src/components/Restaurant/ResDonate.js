@@ -6,6 +6,7 @@ const ResDonate = () => {
   const [foods, setFoods] = useState('');
   const [weight, setWeight] = useState('');
 
+
   const handleRequestOrder = async () => {
     const email = localStorage.getItem("email");
     if (!email) {
@@ -13,12 +14,16 @@ const ResDonate = () => {
       return;
     }
     try {
+      const storedLocation = JSON.parse(localStorage.getItem("location")) || [];
+      const location = [parseFloat(storedLocation[0]), parseFloat(storedLocation[1])];
       const response = await axios.post(
         `${BACKEND_PATH}/rescuefood/api/v1/restaurant/donate`,
         {
           email,
           donationList: foods.split(",").map((food) => food.trim()),
           weight: parseFloat(weight),
+          location:location,
+          name:localStorage.getItem("name")
         }
       );
       alert("Donation request created successfully!");

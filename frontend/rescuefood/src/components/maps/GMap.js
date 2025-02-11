@@ -17,20 +17,25 @@ const GMap = () => {
   const SOCKET_URL = "http://localhost:5002"; // Replace with your backend WebSocket server URL
 
   useEffect(() => {
-    // Connect to the WebSocket server
     const socket = io(SOCKET_URL);
-
-    // Listen for data updates
+    console.log(data);
+  
     socket.on("requestedData", (data) => {
       console.log("Received requested data:", data);
-      setData(data); // Update the state with live data
+      setData(
+        data.map((point) => ({
+          ...point,
+          latitude: Number(point.location[1]), // Correcting latitude
+          longitude: Number(point.location[0]), // Correcting longitude
+        }))
+      );
     });
-
-    // Cleanup on component unmount
+  
     return () => {
       socket.disconnect();
     };
   }, []);
+  
 
   // Fetch user's current location
   useEffect(() => {
@@ -38,19 +43,19 @@ const GMap = () => {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           setCurrentLocation({
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
+            lat: Number(position.coords.latitude), // Ensure it's a number
+            lng: Number(position.coords.longitude), // Ensure it's a number
           });
         },
         (error) => {
           console.error("Error getting location: ", error);
           alert("Unable to fetch location. Please enable location access.");
-          setCurrentLocation({ lat: 17.984, lng: 79.531 }); // Fallback location
+          setCurrentLocation({ lat: 17.984, lng: 79.531 });
         }
       );
     } else {
       alert("Geolocation is not supported by this browser.");
-      setCurrentLocation({ lat: 17.984, lng: 79.531 }); // Fallback location
+      setCurrentLocation({ lat: 17.984, lng: 79.531 });
     }
   }, []);
 
@@ -61,7 +66,7 @@ const GMap = () => {
       const service = new window.google.maps.DistanceMatrixService();
       service.getDistanceMatrix(
         {
-          origins: [currentLocation],
+          origins: [{ lat: currentLocation.lat, lng: currentLocation.lng }],
           destinations: [{ lat: point.latitude, lng: point.longitude }],
           travelMode: window.google.maps.TravelMode.DRIVING,
         },
@@ -95,22 +100,32 @@ const GMap = () => {
               defaultZoom={13}
               mapId={"6d24858ab309337a"}
             >
-              {/* Marker for current location with custom SVG icon */}
-              <AdvancedMarker position={currentLocation} title="Your Location">
+              {/* Marker for current location */}
+              <AdvancedMarker
+                position={{
+                  lat: currentLocation.lat,
+                  lng: currentLocation.lng,
+                }}
+                title="Your Location"
+              >
                 <p className="text-2xl">📍</p>
               </AdvancedMarker>
 
-              {/* Markers for other points from WebSocket data */}
+              {/* Markers for other points */}
               {data.map((point, index) => (
-                <AdvancedMarker
-                  key={index}
-                  position={{ lat: point.latitude, lng: point.longitude }}
-                  title={point.name}
-                  onClick={() => handleMarkerClick(point)}
-                />
-              ))}
+  <AdvancedMarker
+    key={index}
+    position={{
+      lat: point.latitude, // Corrected Latitude
+      lng: point.longitude, // Corrected Longitude
+    }}
+    title={point.restaurantEmail || "Unnamed Restaurant"} // Updated title
+    onClick={() => handleMarkerClick(point)}
+  />
+))}
 
-              {/* InfoWindow for the selected point */}
+
+              {/* InfoWindow */}
               {selectedPoint && (
                 <InfoWindow
                   position={{
@@ -152,7 +167,7 @@ const GMap = () => {
                   <div>
                     <h3 className="text-lg font-semibold">{restaurant.name}</h3>
                     <p className="text-sm text-gray-600">
-                      {restaurant.address || "Address not available"}
+                      {restaurant.restaurantName || "Name not available"}
                     </p>
                   </div>
                   <button

@@ -232,6 +232,7 @@ exports.restaurantsignin = async (req, res) => {
       name: getRestaurant.name,
       email: getRestaurant.email,
       accessToken: token,
+      location:getRestaurant.location.coordinates
     });
 
   } catch (err) {
