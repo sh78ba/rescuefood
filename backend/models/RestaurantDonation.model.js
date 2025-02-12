@@ -9,6 +9,9 @@ const restaurantDonationSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  assignedVolunteer:{
+    type: String,
+  },
   status: {
     type: String,
     enum: ["requested", "completed"],

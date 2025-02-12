@@ -39,7 +39,8 @@ if (formattedLocation.some(isNaN)) {
       restaurantName:name,
       donationList: donationList.map((item) => ({ itemName: item })),
       weight,
-      location: formattedLocation, // Ensure proper format
+      location: formattedLocation,
+      assignedVolunteer:"" // Ensure proper format
     });
     
 

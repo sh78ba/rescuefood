@@ -11,31 +11,30 @@ const GMap = () => {
   const [currentLocation, setCurrentLocation] = useState(null);
   const [selectedPoint, setSelectedPoint] = useState(null);
   const [distance, setDistance] = useState(null);
-  const [data, setData] = useState([]); // Data received from WebSocket
+  const [data, setData] = useState([]);
+  const [otp, setOtp] = useState(null); // OTP state
+  const [acceptedPoint, setAcceptedPoint] = useState(null);
 
-  // WebSocket URL
-  const SOCKET_URL = "http://localhost:5002"; // Replace with your backend WebSocket server URL
+  const SOCKET_URL = "http://localhost:5002";
 
   useEffect(() => {
     const socket = io(SOCKET_URL);
-  
     socket.on("requestedData", (data) => {
       console.log("Received requested data:", data);
       setData(
         data.map((point) => ({
           ...point,
-          latitude: Number(point.location[0]), // Correcting latitude
-          longitude: Number(point.location[1]), // Correcting longitude
+          latitude: Number(point.location[0]),
+          longitude: Number(point.location[1]),
         }))
       );
     });
-  
+
     return () => {
       socket.disconnect();
     };
   }, []);
 
-  // Fetch user's current location
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -59,7 +58,7 @@ const GMap = () => {
 
   const handleMarkerClick = (point) => {
     setSelectedPoint(point);
-    setDistance(null); // Reset previous distance
+    setDistance(null);
 
     if (currentLocation) {
       const service = new window.google.maps.DistanceMatrixService();
@@ -70,7 +69,6 @@ const GMap = () => {
           travelMode: window.google.maps.TravelMode.DRIVING,
         },
         (response, status) => {
-          console.log("Distance Matrix Response:", response, "Status:", status);
           if (
             status === window.google.maps.DistanceMatrixStatus.OK &&
             response.rows.length > 0 &&
@@ -80,11 +78,9 @@ const GMap = () => {
             if (element.status === "OK" && element.distance) {
               setDistance(element.distance.text);
             } else {
-              console.warn("Distance data unavailable:", element.status);
               setDistance("Distance data not available");
             }
           } else {
-            console.error("Error fetching distance:", status);
             setDistance("Unable to fetch distance");
           }
         }
@@ -93,6 +89,9 @@ const GMap = () => {
   };
 
   const handleAccept = (point) => {
+    setAcceptedPoint(point);
+    setOtp(Math.floor(100000 + Math.random() * 900000)); // Generate a 6-digit OTP
+
     const url = `https://www.google.com/maps/dir/?api=1&origin=${currentLocation.lat},${currentLocation.lng}&destination=${point.latitude},${point.longitude}&travelmode=driving`;
     window.open(url, "_blank");
   };
@@ -109,7 +108,6 @@ const GMap = () => {
               defaultZoom={13}
               mapId={"6d24858ab309337a"}
             >
-              {/* Marker for current location */}
               <AdvancedMarker
                 position={{
                   lat: currentLocation.lat,
@@ -120,20 +118,18 @@ const GMap = () => {
                 <p className="text-2xl">📍</p>
               </AdvancedMarker>
 
-              {/* Markers for other points */}
               {data.map((point, index) => (
                 <AdvancedMarker
                   key={index}
                   position={{
-                    lat: point.latitude, // Corrected Latitude
-                    lng: point.longitude, // Corrected Longitude
+                    lat: point.latitude,
+                    lng: point.longitude,
                   }}
                   title={point.restaurantEmail || "Unnamed Restaurant"}
                   onClick={() => handleMarkerClick(point)}
                 />
               ))}
 
-              {/* InfoWindow */}
               {selectedPoint && (
                 <InfoWindow
                   position={{
@@ -162,34 +158,48 @@ const GMap = () => {
           )}
         </div>
 
-        {/* Restaurant List */}
+        {/* OTP Section (Replaces Restaurant List After Accept) */}
         <div className="w-full md:w-2/5 bg-gray-100 overflow-auto h-[40vh] md:h-full p-4">
-          <h2 className="text-xl font-bold mb-4">Available Restaurants</h2>
-          <ul className="space-y-3">
-            {data.length > 0 ? (
-              data.map((restaurant, index) => (
-                <li
-                  key={index}
-                  className="p-4 bg-white rounded shadow flex justify-between items-center"
-                >
-                  <div>
-                    <h3 className="text-lg font-semibold">{restaurant.name}</h3>
-                    <p className="text-sm text-gray-600">
-                      {restaurant.restaurantName || "Name not available"}
-                    </p>
-                  </div>
-                  <button
-                    className="bg-green-500 text-white px-4 py-2 rounded"
-                    onClick={() => handleMarkerClick(restaurant)}
-                  >
-                    View
-                  </button>
-                </li>
-              ))
-            ) : (
-              <p className="text-gray-500">No restaurants available.</p>
-            )}
-          </ul>
+          {otp ? (
+            <div className="flex flex-col items-center justify-center h-full">
+              <h2 className="text-2xl font-bold">Your OTP</h2>
+              <p className="text-4xl font-semibold bg-white p-4 rounded shadow mt-4">
+                {otp}
+              </p>
+              <p className="mt-4 text-gray-600">
+                Please share this OTP upon arrival.
+              </p>
+            </div>
+          ) : (
+            <>
+              <h2 className="text-xl font-bold mb-4">Available Restaurants</h2>
+              <ul className="space-y-3">
+                {data.length > 0 ? (
+                  data.map((restaurant, index) => (
+                    <li
+                      key={index}
+                      className="p-4 bg-white rounded shadow flex justify-between items-center"
+                    >
+                      <div>
+                        <h3 className="text-lg font-semibold">{restaurant.name}</h3>
+                        <p className="text-sm text-gray-600">
+                          {restaurant.restaurantName || "Name not available"}
+                        </p>
+                      </div>
+                      <button
+                        className="bg-green-500 text-white px-4 py-2 rounded"
+                        onClick={() => handleMarkerClick(restaurant)}
+                      >
+                        View
+                      </button>
+                    </li>
+                  ))
+                ) : (
+                  <p className="text-gray-500">No restaurants available.</p>
+                )}
+              </ul>
+            </>
+          )}
         </div>
       </div>
     </APIProvider>
