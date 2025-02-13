@@ -44,13 +44,9 @@ function App() {
 
 
         {/*Paths for volunteer*/}
-          <Route path='/volunteer/dashboard' element={<DashboardVolunteer/>}/>
+          <Route path='/volunteer/dashboard/*' element={<DashboardVolunteer/>}/>
           <Route path="/volunteer/login" element={<Login heading={"Volunteer"} userType={"volunteer"}/>} />
           <Route path='/volunteer/signup' element={<VolunteerSignup/>}/>
-
-
-        <Route path='/volunteer/map' element={<GMap/>}/>
-
         </Routes>
       </div>
     </div>

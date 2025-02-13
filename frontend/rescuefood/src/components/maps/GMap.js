@@ -100,7 +100,7 @@ const GMap = () => {
     <APIProvider apiKey={process.env.REACT_APP_MAP_API}>
       <div className="flex flex-col md:flex-row h-screen">
         {/* Map Section */}
-        <div className="w-full md:w-3/5 h-[60vh] md:h-full">
+        <div className="w-full md:w-3/5 h-[50vh] md:h-full">
           {currentLocation ? (
             <Map
               style={{ width: "100%", height: "100%" }}
