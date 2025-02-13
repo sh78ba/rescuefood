@@ -50,7 +50,7 @@ const Login = (props) => {
         localStorage.setItem('name', data.name);
         localStorage.setItem('type', props.userType);
         localStorage.setItem('location',JSON.stringify(data.location))
-        alert('Login successful!');
+        // alert('Login successful!');
 
         if (props.userType === 'restaurant') {
           navigate('/restaurant/dashboard/home');

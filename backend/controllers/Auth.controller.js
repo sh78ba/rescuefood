@@ -23,46 +23,46 @@ exports.volunteersignup=async(req,res)=>{
     try{
         const created_volunteer=await volunteer_model.create(volunteerObject);
 
-        res.status(201).send({message:"SignUp Successfull!! Please SignIn"})
+       return res.status(201).send({message:"SignUp Successfull!! Please SignIn"})
     }catch(err){
         console.log("Error while registering the volunteer",err)
-        res.status(500).send({
+        return  res.status(500).send({
             message:"Error while registering the volunteer"
         })
     }
 }
 
 //volunteer signin 
-exports.volunteersignin=async(req,res)=>{
-    const request_body=req.body
-    
-    const getUser=await volunteer_model.findOne({email:request_body.email})
+exports.volunteersignin = async (req, res) => {
+  const request_body = req.body;
+  try {
+      const getUser = await volunteer_model.findOne({ email: request_body.email });
 
-    if(getUser==null){
-        res.status(400).send({
-            message:"Email is not valid"
-        })
-    }
+      if (!getUser) {
+          return res.status(400).send({ message: "Email is not valid" }); // Added return
+      }
 
-    const isPasswordValid=bcrypt.compareSync(request_body.password,getUser.password)
+      const isPasswordValid = bcrypt.compareSync(request_body.password, getUser.password);
 
-    if(!isPasswordValid){
-        res.status(401).send({
-            message:"Invalid Password !!"
-        })
-    }
+      if (!isPasswordValid) {
+          return res.status(401).send({ message: "Invalid Password !!" }); // Added return
+      }
 
-    const token=jwt.sign({email:getUser.email},process.env.SECRET_JWT,{
-        expiresIn:604800
-    })
+      const token = jwt.sign({ email: getUser.email }, process.env.SECRET_JWT, {
+          expiresIn: 604800,
+      });
 
-    res.status(200).send({
-        name:getUser.name,
-        email:getUser.email,
-        accessToken:token
-    })
+      return res.status(200).send({
+          name: getUser.name,
+          email: getUser.email,
+          accessToken: token,
+      });
+  } catch (error) {
+      console.error("Error signing in:", error.message);
+      return res.status(500).json({ message: "Internal server error" });
+  }
+};
 
-}
 
 //volunteer forgot password
 
