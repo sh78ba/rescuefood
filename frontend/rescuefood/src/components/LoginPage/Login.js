@@ -48,6 +48,7 @@ const Login = (props) => {
         localStorage.setItem('token', data.accessToken);
         localStorage.setItem('email', data.email);
         localStorage.setItem('name', data.name);
+        localStorage.setItem('phone', data.phone);
         localStorage.setItem('type', props.userType);
         localStorage.setItem('location',JSON.stringify(data.location))
         // alert('Login successful!');
@@ -55,7 +56,7 @@ const Login = (props) => {
         if (props.userType === 'restaurant') {
           navigate('/restaurant/dashboard/home');
         } else {
-          navigate('/volunteer/dashboard');
+          navigate('/volunteer/dashboard/home');
         }
       } else {
         const errorData = await response.json();

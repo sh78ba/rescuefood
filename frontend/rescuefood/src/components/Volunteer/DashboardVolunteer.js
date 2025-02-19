@@ -5,6 +5,8 @@ import { Route, Routes } from "react-router";
 import { useLocation } from "react-router";
 
 import GMap from "../maps/GMap";
+import Profile from "./Profile";
+import History from "./History";
 
 const DashboardVolunteer = () => {
   const location = useLocation();
@@ -34,9 +36,11 @@ const DashboardVolunteer = () => {
           <Routes>
             {/* Route for Home under /volunteer/dashboard */}
             <Route path="home" element={<GMap />} />
-            {/* <Route path="tasks" element={<TasksContent />} />
-            <Route path="reports" element={<ReportsContent />} /> */}
-            {/* <Route path="profile" element={<ProfileContent />} /> */}
+            <Route path="profile" element={<Profile/>} />
+            <Route path="history" element={<History/>} />
+            
+            {/* <Route path="reports" element={<ReportsContent />} />  */}
+            
           </Routes>
         </main>
       </div>

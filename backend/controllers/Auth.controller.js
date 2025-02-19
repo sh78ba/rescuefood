@@ -55,6 +55,7 @@ exports.volunteersignin = async (req, res) => {
       return res.status(200).send({
           name: getUser.name,
           email: getUser.email,
+          phone:getUser.phone,
           accessToken: token,
       });
   } catch (error) {

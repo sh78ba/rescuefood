@@ -2,9 +2,11 @@
 import React from "react";
 import { Route, Routes } from "react-router";
 import { useLocation } from "react-router";
-import Home from "../Home";
-import Header from "../Header";
-import Sidebar from "../Volunteer/Sidebar";
+import Header from "./Header";
+import Sidebar from "../Restaurant/Sidebar";
+import ResHome from "./ResHome";
+import ResProfile from "./ResProfile";
+import ResDonate from "./ResDonate";
 
 const Restauranthome = () => {
   const location = useLocation();
@@ -14,6 +16,7 @@ const Restauranthome = () => {
     "/restaurant/dashboard/home": "Dashboard",
     "/restaurant/dashboard/history": "Volunteering History",
     "/restaurant/dashboard/profile": "Profile",
+    "/restaurant/dashboard/donate": "Donation",
   };
 
   // Get the current header title based on the location
@@ -33,10 +36,11 @@ const Restauranthome = () => {
         <main className="p-6 space-y-6">
           <Routes>
             {/* Route for Home under /restaurant/dashboard */}
-            <Route path="home" element={<Home />} />
+            <Route path="home" element={<ResHome />} />
             {/* Other routes */}
             <Route path="history" element={<div> History Page</div>} />
-            <Route path="profile" element={<div>Profile Page</div>} />
+            <Route path="donate" element={<ResDonate/>} />
+            <Route path="profile" element={<ResProfile/>} />
           </Routes>
         </main>
       </div>

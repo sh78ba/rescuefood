@@ -43,8 +43,7 @@ const ResProfile = () => {
 
   return (
     <div className="bg-white p-8 rounded-2xl shadow-lg max-w-5xl mx-auto mt-10 border border-gray-200">
-      <h1 className="text-3xl font-bold text-gray-900 text-center mb-6">🍽️ Restaurant Profile</h1>
-
+    
       {/* Flex container for horizontal layout */}
       <div className="flex flex-wrap justify-between gap-4">
         
