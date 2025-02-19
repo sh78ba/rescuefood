@@ -124,10 +124,10 @@ exports.getResProfile = async (req, res) => {
 
 exports.saveOTP = async (req, res) => {
   try {
-    const { otp, donationId } = req.body;
+    const { otp, donationId, assignedVolunteer } = req.body;
 
-    if (!otp || !donationId ) {
-      return res.status(400).json({ message: "OTP and restaurantId are required" });
+    if (!otp || !donationId || !assignedVolunteer) {
+      return res.status(400).json({ message: "OTP, donationId, and assignedVolunteer are required" });
     }
 
     const donation = await RestaurantDonationModel.findById(donationId);
@@ -136,12 +136,18 @@ exports.saveOTP = async (req, res) => {
       return res.status(404).json({ message: "Donation request not found" });
     }
 
+    // Update OTP and assignedVolunteer fields
     donation.otp = otp;
+    donation.assignedVolunteer = assignedVolunteer;
+    donation.status="pending"
+    
     await donation.save();
 
-    res.status(200).json({ message: "OTP saved successfully", donation });
+    res.status(200).json({ message: "OTP and Volunteer assigned successfully", donation });
   } catch (error) {
-    console.error("Error saving OTP:", error);
+    console.error("Error saving OTP and Volunteer:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+

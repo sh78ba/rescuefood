@@ -100,6 +100,7 @@ const GMap = () => {
       await axios.post(BACKEND_PATH+"/rescuefood/api/v1/volunteer/otpsave", {
         otp: generatedOtp,
         donationId: donationId._id,
+        assignedVolunteer:localStorage.getItem("email")
       });
       
       console.log("OTP successfully sent to backend");
