@@ -118,3 +118,30 @@ exports.getResProfile = async (req, res) => {
     res.status(500).send({ message: "Server error, please try again later." });
   }
 };
+
+
+//update otp
+
+exports.saveOTP = async (req, res) => {
+  try {
+    const { otp, donationId } = req.body;
+
+    if (!otp || !donationId ) {
+      return res.status(400).json({ message: "OTP and restaurantId are required" });
+    }
+
+    const donation = await RestaurantDonationModel.findById(donationId);
+
+    if (!donation) {
+      return res.status(404).json({ message: "Donation request not found" });
+    }
+
+    donation.otp = otp;
+    await donation.save();
+
+    res.status(200).json({ message: "OTP saved successfully", donation });
+  } catch (error) {
+    console.error("Error saving OTP:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};

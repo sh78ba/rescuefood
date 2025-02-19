@@ -1,5 +1,6 @@
 const auth_controller=require("../controllers/Auth.controller")
 const volunteer_controller=require("../controllers/Volunteer.controller")
+const donation_controller=require("../controllers/Restaurant.controller")
 const auth_mw=require("../middlewares/Auth.mw")
 
 module.exports=(app)=>{
@@ -8,4 +9,5 @@ module.exports=(app)=>{
     app.post("/rescuefood/api/v1/volunteer/resetpasswordrequest",auth_controller.volunteerRequestPasswordReset);
     app.post("/rescuefood/api/v1/volunteer/resetpasswordlink",auth_controller.volunteerResetPassword);
     app.post("/rescuefood/api/v1/volunteer/updatelocation",volunteer_controller.volunteerLocationUpdate);
+    app.post("/rescuefood/api/v1/volunteer/otpsave",donation_controller.saveOTP)
 }

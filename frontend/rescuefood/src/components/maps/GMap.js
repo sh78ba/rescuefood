@@ -6,6 +6,8 @@ import {
   InfoWindow,
 } from "@vis.gl/react-google-maps";
 import io from "socket.io-client";
+import axios from "axios";
+import { BACKEND_PATH } from "../configs/routesconfig";
 
 const GMap = () => {
   const [currentLocation, setCurrentLocation] = useState(null);
@@ -88,11 +90,24 @@ const GMap = () => {
     }
   };
 
-  const handleAccept = (point) => {
-    setAcceptedPoint(point);
-    setOtp(Math.floor(100000 + Math.random() * 900000)); // Generate a 6-digit OTP
+ 
+  const handleAccept = async (donationId) => {
+    const generatedOtp = Math.floor(100000 + Math.random() * 900000);
+    setOtp(generatedOtp);
+    setAcceptedPoint(donationId);
+  
+    try {
+      await axios.post(BACKEND_PATH+"/rescuefood/api/v1/volunteer/otpsave", {
+        otp: generatedOtp,
+        donationId: donationId._id,
+      });
+      
+      console.log("OTP successfully sent to backend");
+    } catch (error) {
+      console.error("Error sending OTP to backend:", error);
+    }
 
-    const url = `https://www.google.com/maps/dir/?api=1&origin=${currentLocation.lat},${currentLocation.lng}&destination=${point.latitude},${point.longitude}&travelmode=driving`;
+    const url = `https://www.google.com/maps/dir/?api=1&origin=${currentLocation.lat},${currentLocation.lng}&destination=${donationId.latitude},${donationId.longitude}&travelmode=driving`;
     window.open(url, "_blank");
   };
 

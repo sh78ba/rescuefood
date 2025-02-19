@@ -14,8 +14,12 @@ const restaurantDonationSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ["requested", "completed"],
+    enum: ["requested", "completed","pending"],
     default: "requested",
+  },
+  otp:{
+    type:String,
+    default:""
   },
   donationList: [
     {
