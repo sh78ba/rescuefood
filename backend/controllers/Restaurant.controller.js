@@ -151,3 +151,39 @@ exports.saveOTP = async (req, res) => {
 };
 
 
+//verify otp
+
+
+exports.verifyOtp = async (req, res) => {
+  try {
+    const { orderId, otp } = req.body;
+
+    // Check if order exists
+    const order = await RestaurantDonationModel.findById(orderId);
+    if (!order) {
+      return res.status(404).json({ success: false, message: "Order not found" });
+    }
+
+    // Check if order is in pending status
+    if (order.status !== "pending") {
+      return res.status(400).json({ success: false, message: "Order is not in pending state" });
+    }
+
+    // Validate OTP
+    if (order.otp !== otp) {
+      return res.status(400).json({ success: false, message: "Invalid OTP" });
+    }
+
+    // Update order status to delivered
+    order.status = "completed";
+    order.updatedAt = new Date();
+    await order.save();
+
+    return res.status(200).json({ success: true, message: "OTP verified, order marked as delivered" });
+  } catch (error) {
+    console.error("Error verifying OTP:", error);
+    return res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
+
+
