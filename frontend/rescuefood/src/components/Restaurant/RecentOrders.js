@@ -27,11 +27,13 @@ const RecentOrders = () => {
     }
   }, []);
 
-  // Sort orders by date (newest first)
-  const sortedOrders = orderHistory.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+  // Filter and prioritize "pending" first, then "requested"
+  const filteredOrders = orderHistory
+    .filter((order) => order.status === "pending" || order.status === "requested")
+    .sort((a, b) => (a.status === "pending" && b.status === "requested" ? -1 : 1));
 
-  // Get the latest 3 sorted orders
-  const latestThreeOrders = sortedOrders.slice(0, 3);
+  // Get the latest 3 relevant orders
+  const latestThreeOrders = filteredOrders.slice(0, 3);
 
   // Function to handle OTP verification
   const handleVerifyOtp = async () => {
@@ -64,7 +66,7 @@ const RecentOrders = () => {
     <div className="p-6 bg-white rounded-lg shadow-lg">
       <h2 className="text-lg font-bold mb-4">Recent Donations</h2>
       {latestThreeOrders.length === 0 ? (
-        <p>No recent donations available.</p>
+        <p>No pending or requested donations available.</p>
       ) : (
         <ul>
           {latestThreeOrders.map((order) => (
@@ -76,11 +78,7 @@ const RecentOrders = () => {
               <div className="flex items-center space-x-2">
                 <span
                   className={`px-2 py-1 rounded ${
-                    order.status === "requested"
-                      ? "bg-yellow-200"
-                      : order.status === "completed"
-                      ? "bg-green-200"
-                      : "bg-red-200"
+                    order.status === "pending" ? "bg-yellow-200" : "bg-red-200"
                   }`}
                 >
                   {order.status}

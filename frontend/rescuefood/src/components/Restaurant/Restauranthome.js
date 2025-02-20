@@ -7,6 +7,7 @@ import Sidebar from "../Restaurant/Sidebar";
 import ResHome from "./ResHome";
 import ResProfile from "./ResProfile";
 import ResDonate from "./ResDonate";
+import HistoryRes from "./HistoryRes"
 
 const Restauranthome = () => {
   const location = useLocation();
@@ -14,9 +15,10 @@ const Restauranthome = () => {
   // Map routes to header titles
   const headerTitles = {
     "/restaurant/dashboard/home": "Dashboard",
-    "/restaurant/dashboard/history": "Volunteering History",
+    "/restaurant/dashboard/history": "Donation History",
     "/restaurant/dashboard/profile": "Profile",
     "/restaurant/dashboard/donate": "Donation",
+  
   };
 
   // Get the current header title based on the location
@@ -38,7 +40,7 @@ const Restauranthome = () => {
             {/* Route for Home under /restaurant/dashboard */}
             <Route path="home" element={<ResHome />} />
             {/* Other routes */}
-            <Route path="history" element={<div> History Page</div>} />
+            <Route path="history" element={<HistoryRes/>} />
             <Route path="donate" element={<ResDonate/>} />
             <Route path="profile" element={<ResProfile/>} />
           </Routes>

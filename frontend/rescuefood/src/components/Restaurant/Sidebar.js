@@ -4,6 +4,7 @@ import { MdDashboard } from "react-icons/md";
 import { CgProfile } from "react-icons/cg";
 import { CiGift, CiLogout } from "react-icons/ci";
 import { useNavigate } from "react-router";
+import { FaHistory } from "react-icons/fa";
 
 const Sidebar = () => {
   const navigate = useNavigate(); // Correctly invoke the useNavigate hook
@@ -36,7 +37,7 @@ const Sidebar = () => {
               Profile
             </span>
           </li>
-          {/* Donation History */}
+          {/* Donation */}
           <li
             className="p-4 hover:bg-blue-800 flex items-center justify-center lg:justify-start group"
             onClick={() => navigate("/restaurant/dashboard/donate")} // Correct usage
@@ -44,6 +45,16 @@ const Sidebar = () => {
             <CiGift className="text-6xl 2xl:text-xl" />
             <span className="hidden 2xl:inline ml-3 absolute bg-black text-white px-2 py-1 rounded shadow-md 2xl:static 2xl:bg-transparent 2xl:shadow-none">
               Donate
+            </span>
+          </li>
+           {/* Donation */}
+           <li
+            className="p-4 hover:bg-blue-800 flex items-center justify-center lg:justify-start group"
+            onClick={() => navigate("/restaurant/dashboard/history")} // Correct usage
+          >
+            <FaHistory className="text-6xl 2xl:text-xl" />
+            <span className="hidden 2xl:inline ml-3 absolute bg-black text-white px-2 py-1 rounded shadow-md 2xl:static 2xl:bg-transparent 2xl:shadow-none">
+              Donation History
             </span>
           </li>
           {/* Logout */}
