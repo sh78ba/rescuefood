@@ -119,7 +119,7 @@ const GMap = () => {
         <div className="w-full md:w-3/5 h-[50vh] md:h-full">
           {currentLocation ? (
             <Map
-              style={{ width: "100%", height: "100%" }}
+              style={{ width: "100%", height: "80%" }}
               defaultCenter={currentLocation}
               defaultZoom={13}
               mapId={"6d24858ab309337a"}
@@ -175,7 +175,7 @@ const GMap = () => {
         </div>
 
         {/* OTP Section (Replaces Restaurant List After Accept) */}
-        <div className="w-full md:w-2/5 bg-gray-100 overflow-auto h-[40vh] md:h-full p-4">
+        <div className="w-full md:w-2/5 bg-gray-100 overflow-auto h-full md:h-[calc(100vh-30vh)]  p-4">
           {otp ? (
             <div className="flex flex-col items-center justify-center h-full">
               <h2 className="text-2xl font-bold">Your OTP</h2>

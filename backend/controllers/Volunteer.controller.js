@@ -1,5 +1,6 @@
 const { assign } = require("nodemailer/lib/shared");
 const volunteer_model = require("../models/Volunteer.model");
+const RestaurantDonation = require("../models/RestaurantDonation.model");
 
 
 exports.volunteerLocationUpdate = async (req, res) => {
@@ -47,5 +48,29 @@ exports.volunteerLocationUpdate = async (req, res) => {
 exports.registerVolunteer = (socket) => {
   socket.join("volunteers");
   console.log(`Socket ${socket.id} joined the 'volunteers' room`);
+};
+
+
+//get history for volunteer
+
+exports.getVolunteerHistory = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ message: "Volunteer email is required" });
+    }
+
+    const history = await RestaurantDonation.find({ assignedVolunteer: email });
+
+    if (!history.length) {
+      return res.status(404).json({ message: "No donation history found" });
+    }
+
+    res.status(200).json({ history });
+  } catch (error) {
+    console.error("Error fetching history:", error);
+    res.status(500).json({ message: "Server error", error });
+  }
 };
 

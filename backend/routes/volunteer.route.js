@@ -10,4 +10,5 @@ module.exports=(app)=>{
     app.post("/rescuefood/api/v1/volunteer/resetpasswordlink",auth_controller.volunteerResetPassword);
     app.post("/rescuefood/api/v1/volunteer/updatelocation",volunteer_controller.volunteerLocationUpdate);
     app.post("/rescuefood/api/v1/volunteer/otpsave",donation_controller.saveOTP)
+    app.post("/rescuefood/api/v1/volunteer/history",volunteer_controller.getVolunteerHistory)
 }
