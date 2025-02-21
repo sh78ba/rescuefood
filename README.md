@@ -1,8 +1,11 @@
 RescueFood App
 
+
 Overview
 
 RescueFood is a web-based platform that connects restaurants with volunteers to facilitate food donation and reduce food waste. Restaurants can create donation requests, and nearby volunteers can view and respond to these requests in real time.
+
+
 
 Features
 
@@ -18,6 +21,9 @@ User Authentication: Secure login for restaurants and volunteers.
 
 Database Management: MongoDB for storing donation requests and volunteer details.
 
+
+
+
 Tech Stack
 
 Frontend: ReactJS, Tailwind CSS
@@ -27,6 +33,8 @@ Backend: Node.js, Express.js, MongoDB
 Real-time Communication: Socket.IO
 
 Maps & Geolocation: Google Maps API
+
+
 
 
 Installation
@@ -60,6 +68,10 @@ node server.js
 Run the Frontend
 
 npm start
+
+
+
+
 
 Usage
 
