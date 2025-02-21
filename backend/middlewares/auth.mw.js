@@ -5,42 +5,36 @@ const jwt = require("jsonwebtoken");
 
 const verifyVolunteerSignUpBody = async (req, res, next) => {
   try {
-    if (!req.body.name) {
-      return res.status(400).send({
-        message: "Name is not provided in request body",
-      });
+    const { name, email, phone, password, location } = req.body;
+
+    if (!name) {
+      return res.status(400).send({ message: "Name is not provided in request body" });
     }
-    if (!req.body.email) {
-      return res.status(400).send({
-        message: "Email is not provided in request body",
-      });
+    if (!email) {
+      return res.status(400).send({ message: "Email is not provided in request body" });
     }
-    if (!req.body.phone) {
-      return res.status(400).send({
-        message: "Phone is not provided in request body",
-      });
+    if (!phone) {
+      return res.status(400).send({ message: "Phone is not provided in request body" });
     }
-    if (!req.body.password) {
-      return res.status(400).send({
-        message: "Password is not provided in request body",
-      });
+    if (!password) {
+      return res.status(400).send({ message: "Password is not provided in request body" });
     }
 
-    const get_user = await volunteer_model.findOne({ email: req.body.email });
-    if (get_user) {
-      return res.status(400).send({
-        message: "Email Already Exists",
-      });
+
+    // Check if the email is already registered
+    const existingUser = await volunteer_model.findOne({ email });
+    if (existingUser) {
+      return res.status(400).send({ message: "Email Already Exists" });
     }
 
-    next();
+    next(); // Proceed to the next middleware/controller
   } catch (err) {
-    console.log("Error while validating volunteer signup body ", err);
-    return res.status(500).send({
-      message: "Error while validating  volunteer signup body",
-    });
+    console.error("Error while validating volunteer signup body", err);
+    return res.status(500).send({ message: "Error while validating volunteer signup body" });
   }
 };
+
+
 
 const verifySignInBody = async (req, res, next) => {
   try {

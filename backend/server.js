@@ -4,7 +4,8 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const http = require("http");
-const setupWebSocket = require('./controllers/Io.controller');
+const {setupWebSocket} = require('./controllers/Io.controller');
+const Volunteer=require("./models/Volunteer.model")
 require("dotenv").config();
 
 const app = express();
@@ -38,6 +39,20 @@ db.once("open", () => {
 // Include route files
 require("./routes/volunteer.route")(app);
 require("./routes/restaurant.route")(app);
+
+const syncIndexes = async () => {
+  try {
+    await Volunteer.syncIndexes();
+    console.log("✅ 2dsphere index created successfully!");
+  } catch (error) {
+    console.error("❌ Error creating index:", error);
+  }
+};
+
+syncIndexes();
+
+
+
 
 // Set up HTTP server and WebSocket
 const server = http.createServer(app);

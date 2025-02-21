@@ -1,3 +1,5 @@
+
+
 import React, { useState, useEffect } from "react";
 import {
   AdvancedMarker,
@@ -14,28 +16,69 @@ const GMap = () => {
   const [selectedPoint, setSelectedPoint] = useState(null);
   const [distance, setDistance] = useState(null);
   const [data, setData] = useState([]);
-  const [otp, setOtp] = useState(null); // OTP state
+  const [otp, setOtp] = useState(null); 
   const [acceptedPoint, setAcceptedPoint] = useState(null);
 
   const SOCKET_URL = "http://localhost:5002";
 
+  // useEffect(() => {
+  //   const socket = io(SOCKET_URL, { transports: ["websocket"] });
+
+  //   socket.emit("register", { email: localStorage.getItem("email") });
+
+  //   socket.on("newDonation", (donations) => {
+  //     console.log("New donation request received:", donations);
+  //     const formattedData = donations.map((point) => ({
+  //       ...point,
+  //       latitude: Number(point.location.coordinates[0]), 
+  //       longitude: Number(point.location.coordinates[1]),
+  //     }));
+  //     setData(formattedData);
+  //   });
+
+  //   return () => {
+  //     socket.off("newDonation");
+  //     socket.disconnect();
+  //   };
+  // }, []);
+
+  const [socket, setSocket] = useState(null);
+
   useEffect(() => {
-    const socket = io(SOCKET_URL);
-    socket.on("requestedData", (data) => {
-      console.log("Received requested data:", data);
-      setData(
-        data.map((point) => ({
+    const newSocket = io("http://localhost:5002", {
+      transports: ["websocket"], // Force WebSocket transport
+      reconnectionAttempts: 5, // Retry connection
+      reconnectionDelay: 2000, // Wait before retrying
+    });
+  
+    setSocket(newSocket);
+  
+    newSocket.on("connect", () => {
+      console.log("Connected to WebSocket");
+      newSocket.emit("registerVolunteer", { email: localStorage.getItem("email") });
+    });
+  
+    newSocket.on("requestedDonations", (data) => {
+      console.log("All donation request:", data);
+      setData((prevData) => [
+        ...prevData,
+        ...data.map((point) => ({
           ...point,
           latitude: Number(point.location[0]),
           longitude: Number(point.location[1]),
-        }))
-      );
+        })),
+      ]);
     });
-
+  
+    newSocket.on("disconnect", () => {
+      console.warn("Socket disconnected.");
+    });
+  
     return () => {
-      socket.disconnect();
+      newSocket.disconnect();
     };
   }, []);
+  
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -90,19 +133,18 @@ const GMap = () => {
     }
   };
 
- 
   const handleAccept = async (donationId) => {
     const generatedOtp = Math.floor(100000 + Math.random() * 900000);
     setOtp(generatedOtp);
     setAcceptedPoint(donationId);
-  
+
     try {
-      await axios.post(BACKEND_PATH+"/rescuefood/api/v1/volunteer/otpsave", {
+      await axios.post(`${BACKEND_PATH}/rescuefood/api/v1/volunteer/otpsave`, {
         otp: generatedOtp,
         donationId: donationId._id,
-        assignedVolunteer:localStorage.getItem("email")
+        assignedVolunteer: localStorage.getItem("email"),
       });
-      
+
       console.log("OTP successfully sent to backend");
     } catch (error) {
       console.error("Error sending OTP to backend:", error);
@@ -134,17 +176,25 @@ const GMap = () => {
                 <p className="text-2xl">📍</p>
               </AdvancedMarker>
 
-              {data.map((point, index) => (
-                <AdvancedMarker
-                  key={index}
-                  position={{
-                    lat: point.latitude,
-                    lng: point.longitude,
-                  }}
-                  title={point.restaurantEmail || "Unnamed Restaurant"}
-                  onClick={() => handleMarkerClick(point)}
-                />
-              ))}
+              {
+                data.map((point, index) => {
+                  if (!point.location || isNaN(point.latitude) || isNaN(point.longitude)) {
+                    console.warn("Invalid location for point:", point);
+                    return null;
+                  }
+                  return (
+                    <AdvancedMarker
+                      key={index}
+                      position={{
+                        lat: point.latitude,
+                        lng: point.longitude,
+                      }}
+                      title={point.restaurantEmail || "Unnamed"}
+                    />
+                  );
+                })
+                
+              }
 
               {selectedPoint && (
                 <InfoWindow
@@ -174,7 +224,7 @@ const GMap = () => {
           )}
         </div>
 
-        {/* OTP Section (Replaces Restaurant List After Accept) */}
+        {/* OTP Section */}
         <div className="w-full md:w-2/5 bg-gray-100 overflow-auto h-full md:h-[calc(100vh-30vh)]  p-4">
           {otp ? (
             <div className="flex flex-col items-center justify-center h-full">
@@ -223,3 +273,4 @@ const GMap = () => {
 };
 
 export default GMap;
+

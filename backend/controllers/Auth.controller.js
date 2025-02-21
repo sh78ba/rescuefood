@@ -9,28 +9,60 @@ const nodemailer=require("nodemailer")
 
 /***********For Volunteer  **********/
 //volunteer signup
-exports.volunteersignup=async(req,res)=>{
-    const request_body=req.body
+exports.volunteersignup = async (req, res) => {
+  try {
+    const { name, email, phone, location, password } = req.body;
 
-    const volunteerObject={
-        name:request_body.name,
-        email:request_body.email,
-        phone:request_body.phone,
-        location:request_body.location,
-        password:bcrypt.hashSync(request_body.password,8)
+    // Validate required fields
+    if (!name || !email || !phone || !password) {
+      return res.status(400).send({ message: "Name, email, phone, and password are required" });
     }
 
-    try{
-        const created_volunteer=await volunteer_model.create(volunteerObject);
-
-       return res.status(201).send({message:"SignUp Successfull!! Please SignIn"})
-    }catch(err){
-        console.log("Error while registering the volunteer",err)
-        return  res.status(500).send({
-            message:"Error while registering the volunteer"
-        })
+    // Check if volunteer with the same email already exists
+    const existingVolunteer = await volunteer_model.findOne({ email });
+    if (existingVolunteer) {
+      return res.status(400).send({ message: "Email already in use" });
     }
-}
+
+    let locationData = {
+      type: "Point",
+      coordinates: [0, 0], // Default location
+    };
+
+    // Validate location if provided
+    if (location) {
+      if (
+        !location.type ||
+        location.type !== "Point" ||
+        !Array.isArray(location.coordinates) ||
+        location.coordinates.length !== 2
+      ) {
+        return res.status(400).send({
+          message: "Invalid location format. Must be { type: 'Point', coordinates: [longitude, latitude] }",
+        });
+      }
+      locationData.coordinates = location.coordinates;
+    }
+
+    // Create the volunteer object
+    const volunteerObject = {
+      name,
+      email,
+      phone,
+      location: locationData,
+      password: bcrypt.hashSync(password, 8),
+    };
+
+    // Save to database
+    await volunteer_model.create(volunteerObject);
+
+    return res.status(201).send({ message: "SignUp Successful! Please Sign In" });
+
+  } catch (err) {
+    console.error("Error while registering the volunteer:", err);
+    return res.status(500).send({ message: "Error while registering the volunteer" });
+  }
+};
 
 //volunteer signin 
 exports.volunteersignin = async (req, res) => {

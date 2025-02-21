@@ -12,14 +12,20 @@ const setupWebSocket = (server) => {
   });
 
   io.on("connection", (socket) => {
-    console.log("New client connected:", socket.id);
+  console.log("New client connected:", socket.id);
 
-    // Example event listener
-    socket.on("disconnect", () => {
-      console.log("Client disconnected:", socket.id);
-    });
+  // Make the volunteer join a room based on their email
+  socket.on("registerVolunteer", (email) => {
+    
+    socket.join(email.email);  // This creates a room with the email as the room name
+    console.log(`Volunteer joined room: ${email}`);
   });
-};
+
+  socket.on("disconnect", () => {
+    console.log("Client disconnected:", socket.id);
+  });
+});
+}
 
 const getIoInstance = () => {
   if (!io) {
@@ -28,5 +34,5 @@ const getIoInstance = () => {
   return io;
 };
 
-module.exports = setupWebSocket;
-module.exports.getIoInstance = getIoInstance;
+// ✅ Correct way to export both functions
+module.exports = { setupWebSocket, getIoInstance };

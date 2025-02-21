@@ -37,8 +37,7 @@ const RecentOrders = () => {
 
   return (
     <div className="p-6 bg-white rounded-lg shadow-lg">
-      <h2 className="text-xl font-bold mb-6 text-gray-800">Recent Donations</h2>
-
+    
       {currentOrders.length === 0 ? (
         <p className="text-gray-600 text-center">No recent donations available.</p>
       ) : (
