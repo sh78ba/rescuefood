@@ -28,8 +28,8 @@ const RestaurantSignup = () => {
 
     if (name === "latitude" || name === "longitude") {
       const coordinates = [...formData.location.coordinates];
-      if (name === "latitude") coordinates[1] = parseFloat(value);
-      if (name === "longitude") coordinates[0] = parseFloat(value);
+      if (name === "longitude") coordinates[1] = parseFloat(value);
+      if (name === "latitude") coordinates[0] = parseFloat(value);
       setFormData({
         ...formData,
         location: { ...formData.location, coordinates },

@@ -155,7 +155,7 @@ const VolunteerSignup = () => {
             ...prevData,
             location: {
               type: 'Point',
-              coordinates: [latitude, longitude], // Latitude first, Longitude second
+              coordinates: [longitude, latitude], // Latitude first, Longitude second
             },
           }));
         },
@@ -174,8 +174,8 @@ const VolunteerSignup = () => {
     if (name === 'latitude' || name === 'longitude') {
       let coordinates = [...formData.location.coordinates];
 
-      if (name === 'latitude') coordinates[0] = parseFloat(value) || 0; // Latitude at index 0
-      if (name === 'longitude') coordinates[1] = parseFloat(value) || 0; // Longitude at index 1
+      if (name === 'longitude') coordinates[0] = parseFloat(value) || 0; // Latitude at index 0
+      if (name === 'latitude') coordinates[1] = parseFloat(value) || 0; // Longitude at index 1
 
       setFormData({ ...formData, location: { ...formData.location, coordinates } });
     } else {
@@ -252,7 +252,7 @@ const VolunteerSignup = () => {
             type="number"
             name="latitude"
             placeholder="Latitude"
-            value={formData.location.coordinates[0]}
+            value={formData.location.coordinates[1]}
             onChange={handleChange}
             className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
@@ -260,7 +260,7 @@ const VolunteerSignup = () => {
             type="number"
             name="longitude"
             placeholder="Longitude"
-            value={formData.location.coordinates[1]}
+            value={formData.location.coordinates[0]}
             onChange={handleChange}
             className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
           />

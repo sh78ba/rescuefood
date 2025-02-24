@@ -6,59 +6,79 @@ const volunteer_model=require("../models/Volunteer.model")
 
 const { getIoInstance } = require('./Io.controller');
 
+
+
 exports.notifyNearbyVolunteers = async (donation) => {
   try {
-    const io = getIoInstance(); // Get the io instance
-    if (!io) {
-      throw new Error("Socket.io instance is not initialized");
+    const io = getIoInstance();
+    if (!io) throw new Error("Socket.io instance is not initialized");
+
+    const { location } = donation; // Extract location
+
+    // **Ensure location is in correct format**
+    if (!location || !location.coordinates || !Array.isArray(location.coordinates) || location.coordinates.length !== 2) {
+      console.error("Invalid location format:", location);
+      return [];
     }
 
-    const { location } = donation; // Restaurant coordinates [lat, lon]
+    const formattedCoordinates = [location.coordinates[0], location.coordinates[1]];
+    console.log("Using location for query:", formattedCoordinates);
 
-    // Find volunteers within 20km radius
+    // **Find volunteers within 20km radius**
     const nearbyVolunteers = await volunteer_model.find({
+      location: {
+        $nearSphere: { // Change to $near if needed
+          $geometry: {
+            type: "Point",
+            coordinates: formattedCoordinates,
+          },
+          $maxDistance: 20000, // 20km in meters
+        },
+      },
+    });
+
+    if (!nearbyVolunteers.length) {
+      console.log("No nearby volunteers found.");
+      return [];
+    }
+
+    console.log(`Found ${nearbyVolunteers.length} nearby volunteers`);
+
+    // **Find all "requested" donations in the same 20km area**
+    const nearbyDonations = await RestaurantDonationModel.find({
       location: {
         $nearSphere: {
           $geometry: {
             type: "Point",
-            coordinates: location
+            coordinates: formattedCoordinates,
           },
-          $maxDistance: 20000 // 20km in meters
-        }
-      }
+          $maxDistance: 20000, // 20km
+        },
+      },
+      status: "requested", // ✅ Only fetch donations with "requested" status
     });
 
-    if (nearbyVolunteers.length === 0) {
-      console.log("No nearby volunteers found.");
-      return;
-    }
-    
+    console.log(`Found ${nearbyDonations.length} requested donations nearby`);
 
-    console.log("Nearby Volunteers:", nearbyVolunteers);
-
-    // Emit event to each nearby volunteer
+    // **Emit event to each nearby volunteer**
     nearbyVolunteers.forEach((volunteer) => {
       console.log(`Emitting event to: ${volunteer.email}`);
-      io.to(volunteer.email).emit("newDonation", {
-        donation
-      });
+      io.to(volunteer.email).emit("newDonation", { donations: nearbyDonations });
     });
 
-    console.log(io.sockets.adapter.rooms);
-
-
+    return nearbyVolunteers;
   } catch (error) {
     console.error("Error notifying volunteers:", error);
+    return [];
   }
 };
-
 
 
 exports.createRequest = async (req, res) => {
   try {
     const { email, donationList, weight, location, name } = req.body;
 
-    // Validate required fields
+    // **Validate required fields**
     if (!email) return res.status(400).json({ message: "Restaurant email is required." });
     if (!name) return res.status(400).json({ message: "Restaurant name is required." });
     if (!Array.isArray(donationList) || donationList.length === 0) {
@@ -68,21 +88,23 @@ exports.createRequest = async (req, res) => {
       return res.status(400).json({ message: "Weight must be a valid number." });
     }
 
-    // Handle location (allow both [lat, lon] and { coordinates: [lat, lon] })
+    // **Format location correctly**
     let formattedLocation;
     if (Array.isArray(location) && location.length === 2) {
       formattedLocation = location.map(coord => parseFloat(coord));
     } else if (location?.coordinates && Array.isArray(location.coordinates) && location.coordinates.length === 2) {
       formattedLocation = location.coordinates.map(coord => parseFloat(coord));
     } else {
-      return res.status(400).json({ message: "Location must be an object with a 'coordinates' array of two numbers." });
+      return res.status(400).json({ message: "Invalid location format. Expected: [lon, lat] or { coordinates: [lon, lat] }" });
     }
 
     if (formattedLocation.some(isNaN)) {
       return res.status(400).json({ message: "Location coordinates must be valid numbers." });
     }
 
-    // Create new donation request
+    console.log("Formatted Location for Restaurant:", formattedLocation);
+
+    // **Create new donation request**
     const newRequest = new RestaurantDonationModel({
       restaurantEmail: email,
       restaurantName: name,
@@ -98,17 +120,34 @@ exports.createRequest = async (req, res) => {
 
     await newRequest.save();
 
-    // Notify nearby volunteers
-    await exports.notifyNearbyVolunteers(newRequest);
+    // **Find all "requested" donations within 20km**
+    const nearbyDonations = await RestaurantDonationModel.find({
+      location: {
+        $nearSphere: {
+          $geometry: {
+            type: "Point",
+            coordinates: formattedLocation,
+          },
+          $maxDistance: 20000,
+        },
+      },
+      status: "requested", // ✅ Only get donations that need volunteers
+    });
 
-    // Emit to Socket.IO
+    console.log(`Found ${nearbyDonations.length} requested donations nearby`);
+
+    // **Notify nearby volunteers**
+    const nearbyVolunteers = await exports.notifyNearbyVolunteers(newRequest);
+
+    // **Emit only to nearby volunteers**
     const io = getIoInstance();
-    if (io) {
-      const requestedDonations = await RestaurantDonationModel.find({ status: "requested" });
-      io.emit("requestedDonations", requestedDonations);
-      console.log("Emitted all requested donations to volunteers.");
+    if (io && nearbyVolunteers.length > 0) {
+      nearbyVolunteers.forEach((volunteer) => {
+        io.to(volunteer.email).emit("requestedDonations", nearbyDonations);
+      });
+      console.log(`Emitted requested donation only to ${nearbyVolunteers.length} volunteers.`);
     } else {
-      console.error("Socket.io instance is not initialized");
+      console.log("No nearby volunteers to emit donation request.");
     }
 
     res.status(200).json({ message: "Donation request saved successfully" });
@@ -118,7 +157,6 @@ exports.createRequest = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
-
 
 
 
