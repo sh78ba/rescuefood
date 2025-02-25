@@ -82,7 +82,7 @@ const ResProfile = () => {
           </div>
           {coordinates.length === 2 ? (
             <p className="text-gray-800 font-medium ml-7 mt-1">
-            Latitude: {coordinates[0]}, Longitude: {coordinates[1]}
+            Latitude: {coordinates[1]}, Longitude: {coordinates[0]}
             </p>
           ) : (
             <p className="text-gray-800 mt-1">Location data not available</p>
