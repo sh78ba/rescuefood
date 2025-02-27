@@ -14,7 +14,7 @@ const Sidebar = () => {
   }
 
   return (
-    <div className="w-20 2xl:w-64 bg-[#ECE852] text-white flex flex-col">
+    <div className="w-20 2xl:w-64 bg-[#ECE852] text-black flex flex-col">
       <nav className="flex-grow">
         <ul className="space-y-2">
           {/* Dashboard */}
