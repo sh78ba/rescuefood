@@ -70,8 +70,8 @@ const Login = (props) => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
+    <div className="flex justify-center items-center min-h-screen bg-[#ECE852]">
+      <div className="w-full max-w-md bg-[#ECE852] p-8 rounded-lg shadow-lg">
         <h1 className="text-3xl font-bold text-center mb-6 text-black">{props.heading}</h1>
         <form onSubmit={handleLogin} className="space-y-4">
           <div className="flex flex-col">

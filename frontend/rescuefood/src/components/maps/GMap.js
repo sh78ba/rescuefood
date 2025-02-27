@@ -455,7 +455,7 @@ const GMap = () => {
                     <h3>{selectedPoint.restaurantName}</h3>
                     {distance && <p>Distance: {distance}</p>}
                     <button
-                      className="bg-blue-500 text-white px-4 py-2 mt-2 rounded"
+                      className="bg-[#5CB338] text-white px-4 py-2 mt-2 rounded"
                       onClick={() => handleAccept(selectedPoint)}
                     >
                       Accept

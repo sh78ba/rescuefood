@@ -4,7 +4,6 @@ import ProtectedRoute from "./components/auth/ProtectedRoute";
 import "./App.css";
 import Home from "./components/Home";
 import Topdonors from "./components/Topdonors";
-import Register from "./components/Register";
 import Login from "./components/LoginPage/Login";
 import Restauranthome from "./components/Restaurant/Restauranthome";
 import DashboardVolunteer from "./components/Volunteer/DashboardVolunteer";
@@ -18,7 +17,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/topdonors" element={<Topdonors />} />
-        <Route path="/register" element={<Register />} />
+  
         
         {/* Restaurant Authentication */}
         <Route path="/restaurant/login" element={<Login heading="Restaurant" userType="restaurant" />} />

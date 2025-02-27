@@ -20,13 +20,13 @@ const Sidebar = () => {
   ];
 
   return (
-    <div className="w-20 2xl:w-64 bg-blue-600 text-white flex flex-col">
+    <div className="w-20 2xl:w-64 bg-[#ECE852] text-white flex flex-col">
       <nav className="flex-grow">
         <ul className="space-y-2">
           {menuItems.map((item, index) => (
             <li
               key={index}
-              className="p-4 hover:bg-blue-800 flex items-center justify-center lg:justify-start group cursor-pointer"
+              className="p-4 hover:bg-[#FFC145] flex items-center justify-center lg:justify-start group cursor-pointer"
               onClick={() => navigate(item.path)}
             >
               <span className="text-6xl 2xl:text-xl">{item.icon}</span>
@@ -37,7 +37,7 @@ const Sidebar = () => {
           ))}
           {/* Logout Button */}
           <li
-            className="p-4 hover:bg-blue-800 flex items-center justify-center lg:justify-start group cursor-pointer"
+            className="p-4 hover:bg-[#FFC145] flex items-center justify-center lg:justify-start group cursor-pointer"
             onClick={handleLogout}
           >
             <CiLogout className="text-6xl 2xl:text-xl" />
