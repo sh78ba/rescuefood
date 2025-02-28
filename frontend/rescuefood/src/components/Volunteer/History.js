@@ -23,7 +23,7 @@ const History = () => {
         setHistoryData(response.data.history || []);
       } catch (error) {
         console.error("Error fetching history:", error);
-        setError("Failed to fetch history. Please try again.");
+  
       }
     };
 

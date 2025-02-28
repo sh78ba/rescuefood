@@ -19,7 +19,7 @@ const RecentOrders = () => {
           setOrderHistory(response.data.donations || []);
         } catch (err) {
           console.error(err);
-          alert("Failed to fetch order history.");
+  
         }
       };
       fetchOrderHistory();
