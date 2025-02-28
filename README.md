@@ -1,10 +1,10 @@
-RescueFood App
+SharePlate
 <br>
 <br>
 Overview
 <br>
 <br>
-RescueFood is a web-based platform that connects restaurants with volunteers to facilitate food donation and reduce food waste. Restaurants can create donation requests, and nearby volunteers can view and respond to these requests in real time.
+SharePlate is a web-based platform that connects restaurants with volunteers to facilitate food donation and reduce food waste. Restaurants can create donation requests, and nearby volunteers can view and respond to these requests in real time.
 <br>
 <br>
 
