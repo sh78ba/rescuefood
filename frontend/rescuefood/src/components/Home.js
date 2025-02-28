@@ -58,13 +58,14 @@ const Home = () => {
         className="w-full max-w-4xl mt-20 p-10 bg-[#ECE852] rounded-lg shadow-lg flex flex-col md:flex-row items-center"
       >
         {/* Left: Image */}
-        <div className="w-full md:w-1/2">
-          <img
-            src={AboutImage}
-            alt="About SharePlate"
-            className="rounded-lg shadow-lg w-full"
-          />
-        </div>
+        <div className="w-full md:w-1/2 flex justify-center">
+  <img
+    src={AboutImage}
+    alt="About SharePlate"
+    className="rounded-lg shadow-lg w-64 h-64 object-cover"
+  />
+</div>
+
 
         {/* Right: Text */}
         <div className="w-full md:w-1/2 md:pl-10 mt-6 md:mt-0">
