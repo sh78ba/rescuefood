@@ -26,7 +26,6 @@ const ResDonate = () => {
           name:localStorage.getItem("name")
         }
       );
-      alert("Donation request created successfully!");
       setFoods('');
       setWeight('');
       console.log(response.data);
