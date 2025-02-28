@@ -23,7 +23,9 @@ const Login = (props) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
-
+  const handleForgotPassword=()=>{
+    navigate("/forgotpassword")
+  }
   const handleLogin = async (e) => {
     e.preventDefault();
     setError('');
@@ -100,7 +102,7 @@ const Login = (props) => {
           </div>
           {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
           <div className="text-right">
-            <p className="text-sm text-green-500 hover:underline cursor-pointer">
+            <p onClick={handleForgotPassword} className="text-sm text-green-500 hover:underline cursor-pointer">
               Forgot Password?
             </p>
           </div>

@@ -1,4 +1,4 @@
-// import { Route, Routes, useLocation } from "react-router";
+
 import { Navigate, Route, Routes } from "react-router";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import "./App.css";
@@ -10,6 +10,7 @@ import DashboardVolunteer from "./components/Volunteer/DashboardVolunteer";
 import RestaurantSignUp from "./components/Restaurant/RestaurantSignup";
 import VolunteerSignup from "./components/Volunteer/VolunteerSignUp";
 import Kycform from "./components/Kycform";
+import ForgotPassword from "./components/ForgotandResetPassword/ForgotPassword";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/topdonors" element={<Topdonors />} />
+        <Route path="/forgotpassword" element={<ForgotPassword />} />
   
         
         {/* Restaurant Authentication */}
