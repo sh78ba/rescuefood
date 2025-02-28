@@ -1,3 +1,4 @@
+
 import React from "react";
 import Sidebar from "./Sidebar";
 import Header from "./Header";
@@ -19,7 +20,7 @@ const DashboardVolunteer = () => {
   };
 
   // Get the current header title based on the location
-  const currentHeaderTitle = headerTitles[location.pathname];
+  const currentHeaderTitle = headerTitles[location.pathname] || "Dashboard";
 
   return (
     <div className="flex h-screen bg-gray-100">
@@ -27,20 +28,16 @@ const DashboardVolunteer = () => {
       <Sidebar />
 
       {/* Main Content Area */}
-      <div className="flex flex-col flex-grow">
+      <div className="flex flex-col flex-grow min-h-screen overflow-auto">
         {/* Header Component */}
         <Header title={currentHeaderTitle} />
 
         {/* Main Section */}
-        <main className="p-2 space-y-2 height-screen">
+        <main className="p-4 sm:p-6 space-y-4 flex-grow overflow-auto">
           <Routes>
-            {/* Route for Home under /volunteer/dashboard */}
             <Route path="home" element={<GMap />} />
-            <Route path="profile" element={<Profile/>} />
-            <Route path="history" element={<History/>} />
-            
-            {/* <Route path="reports" element={<ReportsContent />} />  */}
-            
+            <Route path="profile" element={<Profile />} />
+            <Route path="history" element={<History />} />
           </Routes>
         </main>
       </div>
