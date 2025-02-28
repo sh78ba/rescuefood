@@ -22,7 +22,7 @@ exports.notifyNearbyVolunteers = async (donation) => {
     }
 
     const formattedCoordinates = [location.coordinates[0], location.coordinates[1]];
-    console.log("Using location for query:", formattedCoordinates);
+   
 
     // **Find volunteers within 20km radius**
     const nearbyVolunteers = await volunteer_model.find({
@@ -38,7 +38,7 @@ exports.notifyNearbyVolunteers = async (donation) => {
     });
 
     if (!nearbyVolunteers.length) {
-      console.log("No nearby volunteers found.");
+      
       return [];
     }
 
@@ -58,7 +58,6 @@ exports.notifyNearbyVolunteers = async (donation) => {
       status: "requested", // ✅ Only fetch donations with "requested" status
     });
 
-    console.log(`Found ${nearbyDonations.length} requested donations nearby`);
 
     // **Emit event to each nearby volunteer**
     nearbyVolunteers.forEach((volunteer) => {
@@ -102,7 +101,6 @@ exports.createRequest = async (req, res) => {
       return res.status(400).json({ message: "Location coordinates must be valid numbers." });
     }
 
-    console.log("Formatted Location for Restaurant:", formattedLocation);
 
     // **Create new donation request**
     const newRequest = new RestaurantDonationModel({
@@ -134,7 +132,7 @@ exports.createRequest = async (req, res) => {
       status: "requested", // ✅ Only get donations that need volunteers
     });
 
-    console.log(`Found ${nearbyDonations.length} requested donations nearby`);
+  
 
     // **Notify nearby volunteers**
     const nearbyVolunteers = await exports.notifyNearbyVolunteers(newRequest);
