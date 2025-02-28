@@ -10,7 +10,7 @@ import DashboardVolunteer from "./components/Volunteer/DashboardVolunteer";
 import RestaurantSignUp from "./components/Restaurant/RestaurantSignup";
 import VolunteerSignup from "./components/Volunteer/VolunteerSignUp";
 import Kycform from "./components/Kycform";
-import ForgotPassword from "./components/ForgotandResetPassword/ForgotPassword";
+import ForgotPassword from "./components/ForgotPassword/ForgotPassword";
 
 function App() {
   return (

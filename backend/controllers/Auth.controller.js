@@ -1,11 +1,11 @@
-const user_model=require("../models/User.model")
+
 const volunteer_model=require("../models/Volunteer.model")
 const restaurant_model=require("../models/Restaurant.model")
 const bcrypt=require("bcryptjs")
 const jwt=require("jsonwebtoken")
 const config=require("../configs/config")
 const nodemailer=require("nodemailer")
-
+const crypto = require("crypto");
 
 /***********For Volunteer  **********/
 //volunteer signup
@@ -99,98 +99,109 @@ exports.volunteersignin = async (req, res) => {
 
 //volunteer forgot password
 
-exports.volunteerRequestPasswordReset=async(req,res)=>{
-    const req_email=req.body.email;
-try{
-    const get_User=await volunteer_model.findOne({email:req_email})
-    if(!get_User){
-        return res.status(404).send({
-            message:"Email doesn't exists!"
-        })
-    }
-    const secret = process.env.SECRET_JWT + get_User.email;
-    const token = jwt.sign({ email: get_User.email }, secret, { expiresIn: 3600 });
+const otpStore = new Map(); // Temporary store for OTPs
 
-
-    const resetURL=config.volunteerResetPasswordURL+`?email=${get_User.email}&token=${token}`;
-
-    const transporter = nodemailer.createTransport({
-        host: "smtp.gmail.com",
-        port: 465,
-        auth: {
-          user: process.env.APP_EMAIL,
-          pass: process.env.APP_PASSWORD,
-        },
-      });
-  
-      const mailOptions = {
-        to: get_User.email,
-        from: process.env.APP_EMAIL,
-        subject: 'Password Reset Request',
-        text: `You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n
-        Please click on the following link, or paste this into your browser to complete the process:\n\n
-        ${resetURL}\n\n
-        If you did not request this, please ignore this email and your password will remain unchanged.\n`,
-      };
-  
-      await transporter.sendMail(mailOptions);
-  
-      res.status(200).json({ message: 'Password reset link sent' });
-    } catch (error) {
-      res.status(500).json({ message: 'Something went wrong' });
-    }
-
-
-}
-
-
-//volunter reset password 
-exports.volunteerResetPassword = async (req, res) => {
-    const token = req.body.token;
-    const password = req.body.password;
-    const email = req.body.email;
-
-  
+exports.volunteerRequestPasswordReset = async (req, res) => {
+    const { email } = req.body;
     try {
-      // Validate input
-      if (!token || !password || !email) {
-        return res.status(400).json({ message: "All fields are required!" });
-      }
-  
-      // Find user
-      const user = await volunteer_model.findOne({ email });
-      if (!user) {
-        return res.status(404).json({ message: "User not found!" });
-      }
-  
-      // Construct secret
-  
-      // Verify token
-      const secret = process.env.SECRET_JWT + user.email;
-let verify;
-try {
-    verify = jwt.verify(token, secret);
-} catch (err) {
-    console.error("JWT verification failed:", err.message);
-    return res.status(400).json({ message: "Invalid or expired token" });
-}
+        const user = await volunteer_model.findOne({ email });
+        if (!user) {
+            return res.status(404).json({ message: "Email doesn't exist!" });
+        }
 
-  
-      // Hash the new password
-      const encryptedPassword = await bcrypt.hash(password, 8);
-  
-      // Update user's password
-      await volunteer_model.updateOne(
-        { email },
-        { $set: { password: encryptedPassword } }
-      );
-  
-      res.status(200).json({ message: "Password has been reset successfully" });
+        // Generate a 6-digit OTP
+        const otp = crypto.randomInt(100000, 999999).toString();
+
+        // Store OTP in memory with expiry (10 min)
+        otpStore.set(email, { otp, expiresAt: Date.now() + 10 * 60 * 1000 });
+
+        const transporter = nodemailer.createTransport({
+            host: "smtp.gmail.com",
+            port: 465,
+            auth: {
+                user: process.env.APP_EMAIL,
+                pass: process.env.APP_PASSWORD,
+            },
+        });
+
+        const mailOptions = {
+            to: email,
+            from: process.env.APP_EMAIL,
+            subject: "Password Reset OTP",
+            text: `Your OTP for password reset is: ${otp}. It is valid for 10 minutes.`,
+        };
+
+        await transporter.sendMail(mailOptions);
+
+        res.status(200).json({ message: "OTP sent to your email" });
     } catch (error) {
-      console.error("Error resetting password:", error.message);
-      res.status(500).json({ message: "Internal server error" });
+        res.status(500).json({ message: "Something went wrong" });
     }
-  };
+};
+
+
+//verify OTP
+exports.volunteerVerifyOTP = async (req, res) => {
+  const { email, otp } = req.body;
+
+  try {
+      if (!otpStore.has(email)) {
+          return res.status(400).json({ message: "OTP expired or not requested!" });
+      }
+
+      const storedOtp = otpStore.get(email);
+
+      // Check if OTP matches
+      if (storedOtp.otp !== otp) {
+          return res.status(400).json({ message: "Invalid OTP!" });
+      }
+
+      // Check if OTP is expired
+      if (Date.now() > storedOtp.expiresAt) {
+          otpStore.delete(email); // Remove expired OTP
+          return res.status(400).json({ message: "OTP expired!" });
+      }
+
+      // OTP is valid, proceed to reset password
+      res.status(200).json({ message: "OTP verified, proceed to reset password" });
+  } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+
+//reset password 
+
+
+exports.volunteerResetPassword = async (req, res) => {
+    const { email, password } = req.body;
+
+    try {
+        if (!otpStore.has(email)) {
+            return res.status(400).json({ message: "OTP verification required!" });
+        }
+
+        // Find user
+        const user = await volunteer_model.findOne({ email });
+        if (!user) {
+            return res.status(404).json({ message: "User not found!" });
+        }
+
+        // Hash new password
+        const encryptedPassword = await bcrypt.hash(password, 8);
+
+        // Update password
+        await volunteer_model.updateOne({ email }, { $set: { password: encryptedPassword } });
+
+        // Remove OTP from store after successful reset
+        otpStore.delete(email);
+
+        res.status(200).json({ message: "Password reset successfully" });
+    } catch (error) {
+        res.status(500).json({ message: "Internal server error" });
+    }
+};
+
 
 
 
@@ -276,99 +287,91 @@ exports.restaurantsignin = async (req, res) => {
 
 
 //restaurant forgot password
-exports.restaurantResetPassword = async (req, res) => {
-  const token = req.body.token;
-  const password = req.body.password;
-  const email = req.body.email;
-
-
+const otpStoreRestaurant = new Map(); 
+exports.restaurantRequestPasswordReset = async (req, res) => {
+  const { email } = req.body;
   try {
-    // Validate input
-    if (!token || !password || !email) {
-      return res.status(400).json({ message: "All fields are required!" });
-    }
+      const user = await restaurant_model.findOne({ email });
+      if (!user) {
+          return res.status(404).json({ message: "Email doesn't exist!" });
+      }
 
-    // Find user
-    const user = await restaurant_model.findOne({ email });
-    if (!user) {
-      return res.status(404).json({ message: "User not found!" });
-    }
+      // Generate a 6-digit OTP
+      const otp = crypto.randomInt(100000, 999999).toString();
 
-    // Construct secret
+      // Store OTP in memory with expiry (10 min)
+      otpStoreRestaurant.set(email, { otp, expiresAt: Date.now() + 10 * 60 * 1000 });
 
-    // Verify token
-    const secret = process.env.SECRET_JWT + user.email;
-let verify;
-try {
-  verify = jwt.verify(token, secret);
-} catch (err) {
-  console.error("JWT verification failed:", err.message);
-  return res.status(400).json({ message: "Invalid or expired token" });
-}
+      const transporter = nodemailer.createTransport({
+          host: "smtp.gmail.com",
+          port: 465,
+          auth: {
+              user: process.env.APP_EMAIL,
+              pass: process.env.APP_PASSWORD,
+          },
+      });
 
+      const mailOptions = {
+          to: email,
+          from: process.env.APP_EMAIL,
+          subject: "Password Reset OTP",
+          text: `Your OTP for password reset is: ${otp}. It is valid for 10 minutes.`,
+      };
 
-    // Hash the new password
-    const encryptedPassword = await bcrypt.hash(password, 8);
+      await transporter.sendMail(mailOptions);
 
-    // Update user's password
-    await restaurant_model.updateOne(
-      { email },
-      { $set: { password: encryptedPassword } }
-    );
-
-    res.status(200).json({ message: "Password has been reset successfully" });
+      res.status(200).json({ message: "OTP sent to your email" });
   } catch (error) {
-    console.error("Error resetting password:", error.message);
-    res.status(500).json({ message: "Internal server error" });
+      res.status(500).json({ message: "Something went wrong" });
   }
 };
 
-//request password reset
-exports.restaurantRequestPasswordReset=async(req,res)=>{
-  const req_email=req.body.email;
-try{
-  const get_User=await restaurant_model.findOne({email:req_email})
-  if(!get_User){
-      return res.status(404).send({
-          message:"Email doesn't exists!"
-      })
-  }
-  const secret = process.env.SECRET_JWT + get_User.email;
-  const token = jwt.sign({ email: get_User.email }, secret, { expiresIn: 3600 });
+exports.restaurantVerifyOTP = async (req, res) => {
+const { email, otp } = req.body;
 
+try {
+    if (!otpStoreRestaurant.has(email)) {
+        return res.status(400).json({ message: "OTP expired or not requested!" });
+    }
 
-  const resetURL=config.restaurantResetPasswordURL+`?email=${get_User.email}&token=${token}`;
+    const storedOtp = otpStoreRestaurant.get(email);
 
-  const transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 465,
-      auth: {
-        user: process.env.APP_EMAIL,
-        pass: process.env.APP_PASSWORD,
-      },
-    });
+    if (storedOtp.otp !== otp) {
+        return res.status(400).json({ message: "Invalid OTP!" });
+    }
 
-    const mailOptions = {
-      to: get_User.email,
-      from: process.env.APP_EMAIL,
-      subject: 'Password Reset Request',
-      text: `You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n
-      Please click on the following link, or paste this into your browser to complete the process:\n\n
-      ${resetURL}\n\n
-      If you did not request this, please ignore this email and your password will remain unchanged.\n`,
-    };
+    if (Date.now() > storedOtp.expiresAt) {
+        otpStoreRestaurant.delete(email);
+        return res.status(400).json({ message: "OTP expired!" });
+    }
 
-    await transporter.sendMail(mailOptions);
-
-    res.status(200).json({ message: 'Password reset link sent' });
-  } catch (error) {
-    res.status(500).json({ message: 'Something went wrong' });
-  }
-
-
+    res.status(200).json({ message: "OTP verified, proceed to reset password" });
+} catch (error) {
+    res.status(500).json({ message: "Internal server error" });
 }
+};
 
+exports.restaurantResetPassword = async (req, res) => {
+  const { email, password } = req.body;
 
+  try {
+      if (!otpStoreRestaurant.has(email)) {
+          return res.status(400).json({ message: "OTP verification required!" });
+      }
 
-/*******************For User******************************/
+      const user = await restaurant_model.findOne({ email });
+      if (!user) {
+          return res.status(404).json({ message: "User not found!" });
+      }
 
+      const encryptedPassword = await bcrypt.hash(password, 8);
+
+      await restaurant_model.updateOne({ email }, { $set: { password: encryptedPassword } });
+
+      otpStoreRestaurant.delete(email);
+
+      res.status(200).json({ message: "Password reset successfully" });
+  } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
+  }
+};
