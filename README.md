@@ -53,9 +53,6 @@ Clone the Repository
 
 git clone https://github.com/sh78ba/rescuefood.git
 
-Install Dependencies
-
-npm install
 
 Set Up Environment Variables
 Create a .env file and configure:
@@ -65,10 +62,15 @@ REACT_APP_MAP_API="Your API Key"
 
 Run the Backend
 
+cd backend
+npm install
 node server.js
+
 
 Run the Frontend
 
+cd frontend/rescuefood
+npm install
 npm start
 
 
