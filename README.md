@@ -101,11 +101,13 @@ Images:
 Landing Page
 <br>
 <br>
+
 ![alt text](LandingPage.png)
 
 Restaurant
 <br>
 <br>
+
 ![alt text](RestaurantDashboard.png) 
 ![alt text](RestaurantDonationPage.png) 
 ![alt text](RestaurantDonationHistory.png)
@@ -113,6 +115,7 @@ Restaurant
 Volunteer
 <br>
 <br>
+
 ![alt text](VolunteerDashboard.png) 
 ![alt text](VolunteerOTP.png) 
 ![alt text](VolunteerHistory.png)
@@ -120,4 +123,5 @@ Volunteer
 Others
 <br>
 <br>
+
 ![alt text](ForgotPassword.png)
