@@ -3,14 +3,14 @@ RescueFood App
 <br>
 Overview
 <br>
-
-
+<br>
 RescueFood is a web-based platform that connects restaurants with volunteers to facilitate food donation and reduce food waste. Restaurants can create donation requests, and nearby volunteers can view and respond to these requests in real time.
 <br>
 <br>
 
 
 Features
+<br>
 <br>
 
 Real-time Donations: Restaurants can list excess food for donation, which is immediately visible to nearby volunteers.
@@ -29,6 +29,7 @@ Database Management: MongoDB for storing donation requests and volunteer details
 
 Tech Stack
 <br>
+<br>
 Frontend: ReactJS, Tailwind CSS
 
 Backend: Node.js, Express.js, MongoDB
@@ -44,6 +45,7 @@ SMTP Server: For OTP service
 
 Installation
 <br>
+<br>
 Prerequisites
 
 Node.js (>=19.x)
@@ -52,6 +54,7 @@ MongoDB
 <br>
 <br>
 Steps
+<br>
 <br>
 Clone the Repository
 git clone https://github.com/sh78ba/rescuefood.git
@@ -65,6 +68,7 @@ REACT_APP_MAP_API="Your API Key"
 <br>
 Run the Backend
 <br>
+<br>
 cd backend
 npm install
 node server.js
@@ -73,6 +77,7 @@ node server.js
 <br>
 Run the Frontend
 <br>
+<br>
 cd frontend/rescuefood
 npm install
 npm start
@@ -80,6 +85,7 @@ npm start
 <br>
 
 Usage
+<br>
 <br>
 Restaurant: Log in and create a donation request with food details and location.
 
@@ -91,11 +97,14 @@ Live Updates: See new donation requests in real time on the interactive map.
 <br>
 Images:
 <br>
+<br>
 Landing Page
+<br>
 <br>
 ![alt text](LandingPage.png)
 
 Restaurant
+<br>
 <br>
 ![alt text](RestaurantDashboard.png) 
 ![alt text](RestaurantDonationPage.png) 
@@ -103,10 +112,12 @@ Restaurant
 
 Volunteer
 <br>
+<br>
 ![alt text](VolunteerDashboard.png) 
 ![alt text](VolunteerOTP.png) 
 ![alt text](VolunteerHistory.png)
 
 Others
+<br>
 <br>
 ![alt text](ForgotPassword.png)
