@@ -34,6 +34,8 @@ Real-time Communication: Socket.IO
 
 Maps & Geolocation: Google Maps API
 
+SMTP Server: For OTP service
+
 
 
 
@@ -80,3 +82,26 @@ Restaurant: Log in and create a donation request with food details and location.
 Volunteer: Log in to view available donations and accept a request.
 
 Live Updates: See new donation requests in real time on the interactive map.
+
+
+Images:
+
+Landing Page
+
+![alt text](LandingPage.png)
+
+Restaurant
+
+![alt text](RestaurantDashboard.png) 
+![alt text](RestaurantDonationPage.png) 
+![alt text](RestaurantDonationHistory.png)
+
+Volunteer
+
+![alt text](VolunteerDashboard.png) 
+![alt text](VolunteerOTP.png) 
+![alt text](VolunteerHistory.png)
+
+Others
+
+![alt text](ForgotPassword.png)
