@@ -1,5 +1,5 @@
 
 module.exports = {
-  volunteerResetPasswordURL: "http://localhost:5002/rescuefood/api/v1/volunteer/resetpasswordlink",
-  restaurantResetPasswordURL: "http://localhost:5002/rescuefood/api/v1/restaurant/resetpasswordlink"
+  volunteerResetPasswordURL: "https://rescuefoodbackend.vercel.app/rescuefood/api/v1/volunteer/resetpasswordlink",
+  restaurantResetPasswordURL: "https://rescuefoodbackend.vercel.app/rescuefood/api/v1/restaurant/resetpasswordlink"
 };

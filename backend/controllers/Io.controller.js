@@ -6,7 +6,7 @@ const setupWebSocket = (server) => {
   // Initialize WebSocket server
   io = new Server(server, {
     cors: {
-      origin: ["http://localhost:3000"], // Match your frontend origin
+      origin: ["*"], // Match your frontend origin
       methods: ["GET", "POST"],
     },
   });
