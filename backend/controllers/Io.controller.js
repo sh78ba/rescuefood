@@ -6,7 +6,7 @@ const setupWebSocket = (server) => {
   // Initialize WebSocket server
   io = new Server(server, {
     cors: {
-      origin: ["*"], // Match your frontend origin
+      origin: ["https://rescuefoodfrontend.vercel.app"], // Match your frontend origin
       methods: ["GET", "POST"],
     },
   });
