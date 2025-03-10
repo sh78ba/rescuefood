@@ -13,7 +13,7 @@ app.use(express.json());
 
 // CORS setup with multiple allowed origins
 const corsOptions = {
-  origin: ["http://localhost:3000"],
+  origin: ["http://localhost:3000","https://rescuefoodfrontend.vercel.app"],
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization", "x-access-token"], // Add x-access-token
   credentials: true,
