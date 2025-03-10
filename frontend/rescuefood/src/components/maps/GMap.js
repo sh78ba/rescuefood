@@ -19,7 +19,8 @@ const GMap = () => {
   const [acceptedPoint, setAcceptedPoint] = useState(null);
   const [socket, setSocket] = useState(null);
 
-  const SOCKET_URL = "http://localhost:5002";
+  const SOCKET_URL = process.env.REACT_APP_SOCKET_URL;
+
 
   useEffect(() => {
     const newSocket = io(SOCKET_URL, {
