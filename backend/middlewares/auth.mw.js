@@ -1,6 +1,9 @@
 const volunteer_model = require("../models/Volunteer.model");
 const jwt = require("jsonwebtoken");
 
+const restaurant_model = require("../models/Restaurant.model");
+const util=require("util")
+
 /*********** For Volunteer ************************ */
 
 const verifyVolunteerSignUpBody = async (req, res, next) => {
@@ -58,33 +61,6 @@ const verifySignInBody = async (req, res, next) => {
   }
 };
 
-const verifyToken = async (req, res, next) => {
-  const token = req.headers["x-access-token"];
-  if (!token) {
-    return res.staus(403).send({
-      message: "No token found: Unauthorized",
-    });
-  }
-
-  jwt.verify(token, process.env.SECRET_JWT, async (err, decoded) => {
-    if (err) {
-        return res.status(401).send({
-            message:"UnAuthorized!!"
-        })
-    }
-    
-    const user=await volunteer_model.findOne({email:decoded.email})
-    if(!user){
-        return res.status(400).send({
-            message:"UnAuthorized, the user for this token doesn't exists"
-        })
-    }
-
-    req.email=decoded.email
-    next()
-
-  });
-};
 
 
 //for restaurant
@@ -134,12 +110,52 @@ const verifyRestaurantSignUpBody = async (req, res, next) => {
 
 
 
+/*************Token Verification for all *******************/
+const verifyToken = async (req, res, next, userType) => {
+  try {
+    const token = req.headers["x-access-token"];
 
+    if (!token) {
+      return res.status(403).json({ message: "No token found: Unauthorized" });
+    }
 
+    // Convert jwt.verify into a Promise-based function
+    const verifyAsync = util.promisify(jwt.verify);
+    const decoded = await verifyAsync(token, process.env.SECRET_JWT);
+
+    let user;
+    if (userType === "volunteer") {
+      user = await volunteer_model.findOne({ email: decoded.email });
+    } else if (userType === "restaurant") {
+      user = await restaurant_model.findOne({ email: decoded.email });
+    }
+
+    if (!user) {
+      return res.status(400).json({
+        message: "Unauthorized, the user for this token doesn't exist",
+      });
+    }
+
+    req.email = decoded.email;
+    req.userType = userType;
+    next();
+  } catch (error) {
+    console.error("JWT Verification Error:", error);
+    return res.status(401).json({ message: "Unauthorized!" });
+  }
+};
+
+// Middleware for volunteers
+const verifyVolunteerToken = (req, res, next) => verifyToken(req, res, next, "volunteer");
+
+// Middleware for restaurants
+const verifyRestaurantToken = (req, res, next) => verifyToken(req, res, next, "restaurant");
 
 module.exports = {
-    verifyToken:verifyToken,
-    verifySignInBody:verifySignInBody,
-    verifyVolunteerSignUpBody:verifyVolunteerSignUpBody,
-    verifyRestaurantSignUpBody:verifyRestaurantSignUpBody
+  verifyToken,
+  verifyVolunteerToken,
+  verifyRestaurantToken,
+  verifySignInBody,
+  verifyVolunteerSignUpBody,
+  verifyRestaurantSignUpBody,
 };

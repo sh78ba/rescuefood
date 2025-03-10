@@ -10,21 +10,36 @@ const RecentOrders = () => {
 
   useEffect(() => {
     const email = localStorage.getItem("email");
-    if (email) {
-      const fetchOrderHistory = async () => {
-        try {
-          const response = await axios.post(
-            `${BACKEND_PATH}/rescuefood/api/v1/restaurant/history`,
-            { email }
-          );
-          setOrderHistory(response.data.donations || []);
-        } catch (err) {
-          console.error(err);
-        }
-      };
-      fetchOrderHistory();
+    const token = localStorage.getItem("token");
+
+    if (!email || !token) {
+      console.error("❌ Missing email or token in localStorage!");
+      return;
     }
+  
+    const fetchOrderHistory = async () => {
+      try {
+        const response = await axios.post(
+          `${BACKEND_PATH}/rescuefood/api/v1/restaurant/history`,
+          { email },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              "x-access-token": token, // Ensure this is included
+            },
+            withCredentials: true, // Required if backend needs authentication
+          }
+        );
+  
+        setOrderHistory(response.data.donations || []);
+      } catch (err) {
+        console.error("❌ Error fetching order history:", err);
+      }
+    };
+  
+    fetchOrderHistory();
   }, []);
+  
 
   // Filter and prioritize "pending" first, then "requested"
   const filteredOrders = orderHistory
@@ -38,11 +53,21 @@ const RecentOrders = () => {
   const handleVerifyOtp = async () => {
     if (!selectedOrder || !otp) return;
 
+    const token = localStorage.getItem("token"); // Retrieve token for verification
+
     try {
-      const response = await axios.post(`${BACKEND_PATH}/rescuefood/api/v1/restaurant/verify-otp`, {
-        orderId: selectedOrder._id,
-        otp,
-      });
+      const response = await axios.post(
+        `${BACKEND_PATH}/rescuefood/api/v1/restaurant/verify-otp`,
+        {
+          orderId: selectedOrder._id,
+          otp,
+        },
+        {
+          headers: {
+            "x-access-token": token, // Include token in headers
+          },
+        }
+      );
 
       if (response.data.success) {
         alert("OTP Verified! Order marked as completed.");

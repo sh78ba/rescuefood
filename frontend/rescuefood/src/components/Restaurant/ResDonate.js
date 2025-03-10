@@ -9,31 +9,42 @@ const ResDonate = () => {
 
   const handleRequestOrder = async () => {
     const email = localStorage.getItem("email");
-    if (!email) {
+    const token = localStorage.getItem("token"); // Retrieve the token
+  
+    if (!email || !token) {
       alert("Please log in to create a donation request.");
       return;
     }
+  
     try {
       const storedLocation = JSON.parse(localStorage.getItem("location")) || [];
       const location = [parseFloat(storedLocation[0]), parseFloat(storedLocation[1])];
+  
       const response = await axios.post(
         `${BACKEND_PATH}/rescuefood/api/v1/restaurant/donate`,
         {
           email,
           donationList: foods.split(",").map((food) => food.trim()),
           weight: parseFloat(weight),
-          location:location,
-          name:localStorage.getItem("name")
+          location: location,
+          name: localStorage.getItem("name"),
+        },
+        {
+          headers: {
+            "x-access-token": token, // Send the token in headers
+          },
         }
       );
+  
       setFoods('');
       setWeight('');
-      console.log(response.data);
+      alert(response.data.message);
     } catch (err) {
       console.error(err);
       alert("Failed to create donation request.");
     }
   };
+  
 
   return (
     <>

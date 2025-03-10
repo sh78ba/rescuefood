@@ -13,11 +13,12 @@ app.use(express.json());
 
 // CORS setup with multiple allowed origins
 const corsOptions = {
-  origin: ["http://localhost:3000"], // Add other origins if necessary
+  origin: ["http://localhost:3000"],
   methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ["Content-Type", "Authorization"],
+  allowedHeaders: ["Content-Type", "Authorization", "x-access-token"], // Add x-access-token
   credentials: true,
 };
+
 
 app.use(cors(corsOptions));
 

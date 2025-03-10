@@ -12,13 +12,22 @@ const ResProfile = () => {
     const fetchRestaurantProfile = async () => {
       try {
         const email = localStorage.getItem("email");
-        if (!email) throw new Error("No email found in local storage.");
-
+        const token = localStorage.getItem("token"); // Retrieve the token
+  
+        if (!email || !token) {
+          throw new Error("User not logged in.");
+        }
+  
         const response = await axios.post(
           `${BACKEND_PATH}/rescuefood/api/v1/restaurant/profile`,
-          { email }
+          { email },
+          {
+            headers: {
+              "x-access-token": token, // Send the token in headers
+            },
+          }
         );
-
+  
         setRestaurantDetails(response.data);
       } catch (err) {
         setError(err.message || "Failed to fetch restaurant profile.");
@@ -26,9 +35,10 @@ const ResProfile = () => {
         setLoading(false);
       }
     };
-
+  
     fetchRestaurantProfile();
   }, []);
+  
 
   if (loading) {
     return <div className="text-center mt-4 text-lg font-semibold text-gray-600">Loading...</div>;

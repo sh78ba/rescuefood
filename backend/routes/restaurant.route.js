@@ -11,10 +11,10 @@ module.exports=(app)=>{
     app.post("/rescuefood/api/v1/restaurant/resetpasswordrequest",auth_controller.restaurantResetPassword)
     app.post("/rescuefood/api/v1/restaurant/resetverifyotp",auth_controller.restaurantVerifyOTP)
 
-   app.post("/rescuefood/api/v1/restaurant/donate",restuarant_controller.createRequest)
-    app.post("/rescuefood/api/v1/restaurant/history",restuarant_controller.getDonationHistoryByEmail)
-    app.post("/rescuefood/api/v1/restaurant/profile",restuarant_controller.getResProfile)
-    app.post("/rescuefood/api/v1/restaurant/verify-otp",restuarant_controller.verifyOtp)
+   app.post("/rescuefood/api/v1/restaurant/donate",[auth_mw.verifyRestaurantToken],restuarant_controller.createRequest)
+    app.post("/rescuefood/api/v1/restaurant/history",[auth_mw.verifyRestaurantToken],restuarant_controller.getDonationHistoryByEmail)
+    app.post("/rescuefood/api/v1/restaurant/profile",[auth_mw.verifyRestaurantToken],restuarant_controller.getResProfile)
+    app.post("/rescuefood/api/v1/restaurant/verify-otp",[auth_mw.verifyRestaurantToken],restuarant_controller.verifyOtp)
     
 }
 

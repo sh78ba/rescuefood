@@ -61,7 +61,6 @@ exports.notifyNearbyVolunteers = async (donation) => {
 
     // **Emit event to each nearby volunteer**
     nearbyVolunteers.forEach((volunteer) => {
-      console.log(`Emitting event to: ${volunteer.email}`);
       io.to(volunteer.email).emit("newDonation", { donations: nearbyDonations });
     });
 

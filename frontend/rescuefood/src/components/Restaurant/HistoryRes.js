@@ -9,17 +9,25 @@ const RecentOrders = () => {
 
   useEffect(() => {
     const email = localStorage.getItem("email");
+    const token=localStorage.getItem("token");
     if (email) {
       const fetchOrderHistory = async () => {
         try {
           const response = await axios.post(
             `${BACKEND_PATH}/rescuefood/api/v1/restaurant/history`,
-            { email }
+            { email },
+            {
+              headers: {
+                "Content-Type": "application/json",
+                "x-access-token": token, // Ensure this is included
+              },
+              withCredentials: true, // Required if backend needs authentication
+            }
           );
+    
           setOrderHistory(response.data.donations || []);
         } catch (err) {
-          console.error(err);
-  
+          console.error("❌ Error fetching order history:", err);
         }
       };
       fetchOrderHistory();
