@@ -1,7 +1,7 @@
 const auth_controller=require("../controllers/Auth.controller")
 const volunteer_controller=require("../controllers/Volunteer.controller")
 const donation_controller=require("../controllers/Restaurant.controller")
-const auth_mw=require("../middlewares/Auth.mw.js")
+const auth_mw=require("../middlewares/Auth.mw")
 
 module.exports=(app)=>{
     app.post("/rescuefood/api/v1/volunteer/signin",[auth_mw.verifySignInBody],auth_controller.volunteersignin);
