@@ -9,11 +9,10 @@ const Volunteer=require("./models/Volunteer.model")
 require("dotenv").config();
 
 const app = express();
-app.use(express.json());
 
 // CORS setup with multiple allowed origins
 const corsOptions = {
-  origin: ["http://localhost:3000","https://rescuefoodfrontend.vercel.app"],
+  origin: ["http://localhost:3000","https://rescuefoodbackend.vercel.app"],
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization", "x-access-token"], // Add x-access-token
   credentials: true,
@@ -21,6 +20,8 @@ const corsOptions = {
 
 
 app.use(cors(corsOptions));
+
+app.use(express.json());
 
 // MongoDB connection
 mongoose.connect(process.env.MONGO_URL, {
