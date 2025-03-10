@@ -1,1 +1,1 @@
-export const BACKEND_PATH="http://localhost:5002"
+export const BACKEND_PATH=process.env.REACT_APP_BACKEND_PATH
