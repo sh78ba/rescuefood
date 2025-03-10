@@ -1,5 +1,5 @@
 const auth_controller=require("../controllers/Auth.controller.js")
-const auth_mw=require("../middlewares/Auth.mw")
+const auth_mw=require("../middlewares/Auth.mw.js")
 const restuarant_controller=require("../controllers/Restaurant.controller.js")
 
 
