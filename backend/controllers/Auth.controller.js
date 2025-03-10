@@ -7,7 +7,7 @@ const config=require("../configs/config")
 const nodemailer=require("nodemailer")
 const crypto = require("crypto");
 
-/***********For Volunteer  **********/
+/***********For Volunteer  ***********/
 //volunteer signup
 exports.volunteersignup = async (req, res) => {
   try {
