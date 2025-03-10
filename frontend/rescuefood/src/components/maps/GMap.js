@@ -24,7 +24,8 @@ const GMap = () => {
 
   useEffect(() => {
     const newSocket = io(SOCKET_URL, {
-      transports: ["websocket"],
+      transports: ["websocket", "polling"],
+      withCredentials:true,
       reconnectionAttempts: 5,
       reconnectionDelay: 2000,
     });
