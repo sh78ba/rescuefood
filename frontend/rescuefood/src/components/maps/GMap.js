@@ -65,13 +65,47 @@ const GMap = () => {
     };
   }, []);
 
+  // useEffect(() => {
+  //   if (navigator.geolocation) {
+  //     navigator.geolocation.getCurrentPosition(
+  //       (position) => {
+  //         setCurrentLocation({
+  //           lat: Number(position.coords.latitude),
+  //           lng: Number(position.coords.longitude),
+  //         });
+  //             app.post("/rescuefood/api/v1/volunteer/updatelocation");
+          
+  //       },
+  //       (error) => {
+  //         console.error("Error getting location: ", error);
+  //         alert("Unable to fetch location. Please enable location access.");
+  //         setCurrentLocation({ lat: 17.984, lng: 79.531 });
+  //       }
+  //     );
+  //   } else {
+  //     alert("Geolocation is not supported by this browser.");
+  //     setCurrentLocation({ lat: 17.984, lng: 79.531 });
+  //   }
+  // }, []);
+
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          setCurrentLocation({
-            lat: Number(position.coords.latitude),
-            lng: Number(position.coords.longitude),
+          const lat = Number(position.coords.latitude);
+          const lng = Number(position.coords.longitude);
+          setCurrentLocation({ lat, lng });
+  
+          // Send location to backend
+          axios.post(`${BACKEND_PATH}/rescuefood/api/v1/volunteer/updatelocation`, {
+            email: localStorage.getItem("email"),
+            coordinates: [lng, lat], // GeoJSON format: [longitude, latitude]
+          })
+          .then(() => {
+            console.log("Location updated successfully");
+          })
+          .catch((err) => {
+            console.error("Error updating location:", err);
           });
         },
         (error) => {
@@ -85,6 +119,8 @@ const GMap = () => {
       setCurrentLocation({ lat: 17.984, lng: 79.531 });
     }
   }, []);
+  
+
 
   const handleMarkerClick = (point) => {
     setSelectedPoint(point);
