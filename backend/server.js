@@ -36,6 +36,10 @@ db.once("open", () => {
 });
 
 // Include route files
+app.get("/", (req, res) => {
+  res.status(200).json({ message: "Success" });
+});
+
 require("./routes/volunteer.route")(app);
 require("./routes/restaurant.route")(app);
 
